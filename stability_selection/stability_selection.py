@@ -151,6 +151,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     def __init__(self, base_estimator=_base_estimator, alphas=None, n_bootstrap_iterations=100, threshold=0.6,
                  bootstrap_threshold=None, verbose=0, n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
         self.base_estimator = base_estimator
+        # TODO: Can replace array of alphas with a dict {par_name: par_grid}, so we can use arbitrary parameters
         self.alphas = alphas
         self.n_bootstrap_iterations = n_bootstrap_iterations
         self.threshold = threshold
@@ -239,7 +240,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         if not isinstance(threshold, float):
             raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
 
-        if threshold < 0.0 or threshold > 1.0:
+        if threshold is not None and (threshold < 0.0 or threshold > 1.0):
             raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
