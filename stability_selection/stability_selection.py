@@ -3,7 +3,6 @@ Stability selection
 
 This module contains a scikit-learn compatible implementation of stability selection[1].
 
-
 References
 ----------
 [1]
@@ -56,21 +55,24 @@ def _fit_bootstrap_sample(base_estimator, X, y, alpha, threshold=None, random_st
         Boolean mask of selected variables.
     """
     n_samples = X.shape[0]
-    bootstrap = sample_without_replacement(np.arange(n_samples), n_samples // 2, random_state=random_state)
+    bootstrap = sample_without_replacement(n_samples, n_samples // 2, random_state=random_state)
     X_train, y_train = X[bootstrap, :], y[bootstrap]
 
-    if 'C' in base_estimator.get_params().keys():
-        base_estimator.set_params(C=alpha).fit(X_train, y_train)
-    elif 'alpha' in base_estimator.get_params().keys():
-        base_estimator.set_params(alpha=alpha).fit(X_train, y_train)
-    else:
-        raise ValueError('base_estimator needs to have an alpha or C parameter')
+    estimator = base_estimator.steps[-1][1]
 
-    variable_selector = SelectFromModel(estimator=base_estimator, threshold=threshold, prefit=True)
+    if 'C' in estimator.get_params().keys():
+        estimator.set_params(C=alpha)
+    elif 'alpha' in estimator.get_params().keys():
+        estimator.set_params(alpha=alpha)
+    else:
+        raise ValueError('base_estimator needs to have an `alpha` or `C` parameter')
+
+    base_estimator.fit(X_train, y_train)
+    variable_selector = SelectFromModel(estimator=estimator, threshold=threshold, prefit=True)
     return variable_selector.get_support()
 
 
-def plot_stability_path(stability_selection, threshold_highlight=None):
+def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs):
     """Plots stability path.
 
     Parameters
@@ -80,17 +82,25 @@ def plot_stability_path(stability_selection, threshold_highlight=None):
 
     threshold_highlight : float
         Threshold defining the cutoff for the stability scores for the variables that need to be highlighted.
+
+    kwargs : dict
+        Arguments passed to matplotlib plot function.
     """
     check_is_fitted(stability_selection, 'stability_scores_')
 
     threshold = stability_selection.threshold if threshold_highlight is None else threshold_highlight
     paths_to_highlight = stability_selection.get_support(threshold=threshold)
 
-    fig, ax = plt.subplots(1, 1)
-    ax.plot(stability_selection.alphas[~paths_to_highlight],
-            stability_selection.stability_scores_[~paths_to_highlight], 'b-')
-    ax.plot(stability_selection.alphas[paths_to_highlight],
-            stability_selection.stability_scores_[paths_to_highlight], 'r-')
+    fig, ax = plt.subplots(1, 1, **kwargs)
+    ax.plot(stability_selection.alphas,
+            stability_selection.stability_scores_[~paths_to_highlight].T, 'b-')
+    ax.plot(stability_selection.alphas,
+            stability_selection.stability_scores_[paths_to_highlight].T, 'r-')
+
+    if threshold is not None:
+        ax.plot(stability_selection.alphas,
+                threshold * np.ones_like(stability_selection.alphas), '--')
+
     ax.set_ylabel('Stability score')
     ax.set_xlabel('Alpha')
 
@@ -106,6 +116,10 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
     Parameters
     ----------
+    base_estimator : object
+        The base estimator used for stability selection. The estimator must have either a
+        ``C`` or ``alpha`` parameter.
+
     alphas : array-like.
         Grid of values of the penalization parameter to iterate over.
 
@@ -114,6 +128,16 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
     threshold: float.
         Threshold defining the minimum cutoff value for the stability scores.
+
+    bootstrap_threshold: string, float, optional default None
+        The threshold value to use for feature selection. Features whose
+        importance is greater or equal are kept while the others are
+        discarded. If "median" (resp. "mean"), then the ``threshold`` value is
+        the median (resp. the mean) of the feature importances. A scaling
+        factor (e.g., "1.25*mean") may also be used. If None and if the
+        estimator has a parameter penalty set to l1, either explicitly
+        or implicitly (e.g, Lasso), the threshold used is 1e-5.
+        Otherwise, "mean" is used by default.
 
     verbose : integer.
         Controls the verbosity: the higher, the more messages.
@@ -179,10 +203,10 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
 
         if not isinstance(self.threshold, float):
-            raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
+            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
 
         if self.threshold < 0.0 or self.threshold > 1.0:
-            raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
+            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
 
         if self.alphas is None:
             self.alphas = np.logspace(-5, -2, 25)
@@ -209,7 +233,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                                              random_state=random_state)
               for _ in range(self.n_bootstrap_iterations))
 
-            stability_scores[:, idx] = np.vstack(selected_variables).mean(axis=1)
+            stability_scores[:, idx] = np.vstack(selected_variables).mean(axis=0)
 
         self.stability_scores_ = stability_scores
         return self
@@ -237,11 +261,11 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             values are indices into the input feature vector.
         """
 
-        if not isinstance(threshold, float):
-            raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
+        if threshold is not None and not isinstance(threshold, float):
+            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
 
         if threshold is not None and (threshold < 0.0 or threshold > 1.0):
-            raise ValueError('threshold should be a threshold in (0.0, 1.0], got %s' % self.threshold)
+            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
         mask = (self.stability_scores_.max(axis=1) > cutoff)
