@@ -5,7 +5,8 @@ This module contains a scikit-learn compatible implementation of stability selec
 
 References
 ----------
-[1]
+[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the Royal Statistical Society:
+    Series B (Statistical Methodology), 72(4), pp.417-473.
 
 """
 
@@ -110,9 +111,9 @@ def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs)
 
 
 class StabilitySelection(BaseEstimator, TransformerMixin):
-    """Stability selection fits a LASSO model on bootstrap samples of the original data set, for different values of the
-    regularization parameter. Variables that reliably get selected by the LASSO in these bootstrap samples are
-    considered to be stable variables.
+    """Stability selection fits the estimator `base_estimator` on bootstrap samples of the original data set, for
+    different values of the regularization parameter for `base_estimator`. Variables that reliably get selected by the
+    model in these bootstrap samples are considered to be stable variables.
 
     Parameters
     ----------
