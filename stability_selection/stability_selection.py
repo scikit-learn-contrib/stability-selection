@@ -26,7 +26,7 @@ from warnings import warn
 
 _base_estimator = Pipeline([
     ('scaler', StandardScaler()),
-    ('model', LogisticRegression(class_weight='balanced', penalty='l1'))
+    ('model', LogisticRegression(penalty='l1'))
 ])
 
 
