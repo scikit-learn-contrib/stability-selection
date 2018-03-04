@@ -30,7 +30,7 @@ def test_stability_selection():
     chosen_betas = selector.get_support(indices=True)
     X_r = selector.transform(X)
 
-    fig, ax = plot_stability_path(selector)
+    #fig, ax = plot_stability_path(selector)
 
     assert_almost_equal(important_betas, chosen_betas)
     assert(X_r.shape == (n, k))
