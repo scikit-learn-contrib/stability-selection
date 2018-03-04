@@ -3,12 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to sklearn-template's documentation!
-============================================
+Welcome to stability-selection's documentation!
+===============================================
 
-This project is a reference implementation to anyone who wishes to develop
-scikit-learn compatible classes. It comes with a `template` module which
-contains a single estimator with unit tests.
+This project contains an implementation of the stability selection algorithm.
 
 
     .. toctree::
@@ -18,7 +16,7 @@ contains a single estimator with unit tests.
        auto_examples/index
        ...
 
-See the `README <https://github.com/vighneshbirodkar/project-template/blob/master/README.md>`_
+See the `README <https://github.com/thuijskens/stability-selection/blob/master/README.md>`_
 for more information.
 
 
