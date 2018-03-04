@@ -1,5 +1,7 @@
 """
-Stability selection
+===============================
+Stability selection transformer
+===============================
 
 This module contains a scikit-learn compatible implementation of stability selection[1].
 
