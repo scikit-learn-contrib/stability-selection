@@ -9,7 +9,7 @@ the scikit-learn `Estimator` API.
 
 ## Installation and usage
 
-Before installing the module you will need `numpy`, `matplotlib`, and `sklearn`
+Before installing the module you will need `numpy`, `matplotlib`, and `sklearn`.
 To install the module, clone the repository
 ```shell
 git clone https://github.com/thuijskens/stability-selection.git

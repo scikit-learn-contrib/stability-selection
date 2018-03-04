@@ -5,7 +5,7 @@
 
 Welcome to stability-selection's documentation!
 ===============================================
-1
+
 This project contains an implementation of the stability selection algorithm.
 
 Stability selection is a technique that aims to enhance and improve existing feature
@@ -45,7 +45,7 @@ Sability selection works as follows:
    stable set according to the following definition:
 
 .. math::
-    \hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}
+    \hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}.
 
    where :math:`\pi_\text{thr}` is a predefined threshold.
 
