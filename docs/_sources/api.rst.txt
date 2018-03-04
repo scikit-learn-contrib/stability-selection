@@ -1,4 +1,4 @@
 API Documentation
 =================
 
-* :doc:`stability-selection`
+* :doc:`stability_selection`
