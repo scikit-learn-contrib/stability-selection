@@ -1,3 +1,10 @@
+"""
+===========================
+Plotting stability scores
+===========================
+
+An example plot of the stability scores for each variable after fitting :class:`stability_selection.stability_selection.StabilitySelection`
+"""
 import numpy as np
 
 from sklearn.utils import check_random_state
@@ -26,7 +33,8 @@ if __name__ == '__main__':
     selector = StabilitySelection(alphas=np.logspace(-5, -1, 50))
     selector.fit(X, y)
 
-    plot_stability_path(selector)
+    fig, ax = plot_stability_path(selector)
+    fig.show()
 
     selected_variables = selector.get_support(indices=True)
     selected_scores = selector.stability_scores_.max(axis=1)
