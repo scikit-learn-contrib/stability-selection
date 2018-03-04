@@ -54,48 +54,7 @@ print(selector.get_support(indices=True))
 
 ## Algorithmic details
 
-Stability selection is a technique that aims to enhance and improve existing feature 
-selection algorithms. For a generic feature selection algorithm, we have a tuning 
-parameter $\lambda \in \Lambda$ that controls the amount of regularisation. Examples 
-of such algorithms are:
-
-1. $\ell_1$-penalized regression (penalization parameter $\lambda$).
-2. Orthogonal matching pursuit (number of steps in forward selection).
-3. Boosting ($\ell_1$ penalty)
-
-These structure learning algorithms have in common is a parameter $\lambda \in \Lambda$
-that controls the amount of regularisation. For every value of $\lambda$, we obtain a structure 
-estimate $S^\lambda = \{1, \ldots, p\}$, which indicates which variables to select. We are
-interested to determine whether there exists a $\lambda$ such that $S^\lambda$ is identical to 
-$S$ with high probability, and how to achieve the right amount of regularisation.
-
-
-Sability selection works as follows:
-
-1. Define a candidate set of regularization parameters $\Lambda$ and a subsample number $N$. 
-2. For each value $\lambda \in \Lambda$ do:
-
-    a. For each $i$ in $\{1, \ldots, N\}$, do:
-    
-        i. Generate a bootstrap sample of the original data $X^{n \times p}$ of size $\frac{n}{2}$.
-        ii. Run the selection algorithm (LASSO) on the bootstrap sample with regularization parameter $\lambda$.
-    
-    b. Given the selection sets from each subsample, calculate the empirical selection probability for each model component:
-$$
-\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.
-$$
-
-    c. The selection probability for component $k$ is its probability of being selected by the algorithm.
-
-3. Given the selection probabilities for each component and for each value of $\lambda$, construct the 
-   stable set according to the following definition:
-
-$$
-\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}
-$$
-   where $\pi_\text{thr}$ is a predefined threshold.
-
-This algorithm identifies a set of “stable” variables that are selected with high probability.
+See the [documentation](https://thuijskens.github.io/stability-selection/docs/index.html)
 
 ## References
 
