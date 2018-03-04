@@ -21,7 +21,7 @@ def _generate_dummy_classification_data(p=1000, n=1000, k=5, random_state=123321
 
 
 def test_stability_selection():
-    n, k = 1000, 5
+    n, p, k = 1000, 1000, 5
 
     X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
     selector = StabilitySelection(alphas=np.logspace(-5, -1, 25))
@@ -34,5 +34,5 @@ def test_stability_selection():
 
     assert_almost_equal(important_betas, chosen_betas)
     assert(X_r.shape == (n, k))
-    assert(selector.stability_scores_.shape == (selector.n_bootstrap_iterations, selector.alphas.shape[0]))
+    assert(selector.stability_scores_.shape == (p, selector.alphas.shape[0]))
 
