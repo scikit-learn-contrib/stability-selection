@@ -159,7 +159,56 @@
             
   <div class="section" id="welcome-to-stability-selection-s-documentation">
 <h1>Welcome to stability-selection’s documentation!<a class="headerlink" href="#welcome-to-stability-selection-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This project contains an implementation of the stability selection algorithm.</p>
+<p>1
+This project contains an implementation of the stability selection algorithm.</p>
+<p>Stability selection is a technique that aims to enhance and improve existing feature
+selection algorithms. For a generic feature selection algorithm, we have a tuning
+parameter <img class="math" src="_images/math/dddb7d7d39a6b7ca52e2d4ed02eec7e4996498c7.png" alt="\lambda \in \Lambda"/> that controls the amount of regularisation. Examples
+of such algorithms are:</p>
+<ol class="arabic simple">
+<li><img class="math" src="_images/math/a301afaec3a8e4e639ad1d14140c7c5470a8eef2.png" alt="\ell_1"/>-penalized regression (penalization parameter <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>).</li>
+<li>Orthogonal matching pursuit (number of steps in forward selection).</li>
+<li>Boosting (<img class="math" src="_images/math/a301afaec3a8e4e639ad1d14140c7c5470a8eef2.png" alt="\ell_1"/> penalty)</li>
+</ol>
+<p>These structure learning algorithms have in common is a parameter <img class="math" src="_images/math/dddb7d7d39a6b7ca52e2d4ed02eec7e4996498c7.png" alt="\lambda \in \Lambda"/>
+that controls the amount of regularisation. For every value of <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>, we obtain a structure
+estimate <img class="math" src="_images/math/581876350549005c6a5b981f412684086dd7c67b.png" alt="S^\lambda = \{1, \ldots, p\}"/>, which indicates which variables to select. We are
+interested to determine whether there exists a <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/> such that <img class="math" src="_images/math/f219722c2c3dc1e650469850f1ae94deb71ef2cf.png" alt="S^\lambda"/> is identical to
+<img class="math" src="_images/math/1dbc400fcc213305415872f9f625cd2828f97a00.png" alt="S"/> with high probability, and how to achieve the right amount of regularisation.</p>
+<p>Sability selection works as follows:</p>
+<ol class="arabic">
+<li><p class="first">Define a candidate set of regularization parameters <img class="math" src="_images/math/5b99ed91598429157b547a2c3700a6b25c52824a.png" alt="\Lambda"/> and a subsample number <img class="math" src="_images/math/f4170ed8938b79490d8923857962695514a8e4cb.png" alt="N"/>.</p>
+</li>
+<li><p class="first">For each value <img class="math" src="_images/math/dddb7d7d39a6b7ca52e2d4ed02eec7e4996498c7.png" alt="\lambda \in \Lambda"/> do:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p class="first">For each <img class="math" src="_images/math/df0deb143e5ac127f00bd248ee8001ecae572adc.png" alt="i"/> in <img class="math" src="_images/math/5f752ef6109a42080a1eada7b6ce34b5833851b5.png" alt="\{1, \ldots, N\}"/>, do:</p>
+<blockquote>
+<div><ol class="lowerroman simple">
+<li>Generate a bootstrap sample of the original data <img class="math" src="_images/math/a88fe9e4c851372f358ae4126389f4e2f631c6ee.png" alt="X^{n \times p}"/> of size <img class="math" src="_images/math/c5bab77812e384e347085cc3ff6e8871f5894519.png" alt="\frac{n}{2}"/>.</li>
+<li>Run the selection algorithm (LASSO) on the bootstrap sample with regularization parameter <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Given the selection sets from each subsample, calculate the empirical selection probability for each model component:</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<div class="math">
+<p><img src="_images/math/9f3ea3b79453681c11ac4fba8e2943fc9507e215.png" alt="\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.
+
+c. The selection probability for component :math:`k` is its probability of being selected by the algorithm."/></p>
+</div><ol class="arabic simple" start="3">
+<li>Given the selection probabilities for each component and for each value of <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>, construct the
+stable set according to the following definition:</li>
+</ol>
+<div class="math">
+<p><img src="_images/math/aa5288cc99fd34a7a37e98acbf1c4352f3e34cb5.png" alt="\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}
+
+where :math:`\pi_\text{thr}` is a predefined threshold."/></p>
+</div><p>This algorithm identifies a set of “stable” variables that are selected with high probability.</p>
 <blockquote>
 <div><div class="toctree-wrapper compound">
 <ul>
