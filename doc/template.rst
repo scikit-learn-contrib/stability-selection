@@ -1,7 +1,7 @@
-Template
-========
+StabilitySelection
+==================
 
 The documentation of the template module.
 
-.. automodule:: skltemplate.template
+.. automodule:: stability_selection.stability_selection
    :members:
