@@ -8,6 +8,26 @@ General examples
 Introductory examples.
 
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example plot of the stability scores for each variable after fitting :class:`stability_selec...">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_stability_selection_example_thumb.png
+
+        :ref:`sphx_glr_auto_examples_stability_selection_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/stability_selection_example
 .. raw:: html
 
     <div style='clear:both'></div>

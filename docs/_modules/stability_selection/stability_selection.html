@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>stability_selection.stability_selection &mdash; sklearn-template 0.1.0 documentation</title>
+  <title>stability_selection.stability_selection &mdash; stability-selection 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="sklearn-template 0.1.0 documentation" href="../../index.html"/>
+    <link rel="top" title="stability-selection 0.1.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -57,7 +57,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> sklearn-template
+            <a href="../../index.html" class="icon icon-home"> stability-selection
           
 
           
@@ -108,7 +108,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">sklearn-template</a>
+          <a href="../../index.html">stability-selection</a>
         
       </nav>
 
@@ -159,7 +159,9 @@
             
   <h1>Source code for stability_selection.stability_selection</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Stability selection</span>
+<span class="sd">===============================</span>
+<span class="sd">Stability selection transformer</span>
+<span class="sd">===============================</span>
 
 <span class="sd">This module contains a scikit-learn compatible implementation of stability selection[1].</span>
 
@@ -233,7 +235,7 @@
     <span class="k">return</span> <span class="n">variable_selector</span><span class="o">.</span><span class="n">get_support</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="plot_stability_path"><a class="viewcode-back" href="../../template.html#stability_selection.stability_selection.plot_stability_path">[docs]</a><span class="k">def</span> <span class="nf">plot_stability_path</span><span class="p">(</span><span class="n">stability_selection</span><span class="p">,</span> <span class="n">threshold_highlight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_stability_path"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.plot_stability_path">[docs]</a><span class="k">def</span> <span class="nf">plot_stability_path</span><span class="p">(</span><span class="n">stability_selection</span><span class="p">,</span> <span class="n">threshold_highlight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots stability path.</span>
 
 <span class="sd">    Parameters</span>
@@ -270,7 +272,7 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
 
 
-<div class="viewcode-block" id="StabilitySelection"><a class="viewcode-back" href="../../template.html#stability_selection.stability_selection.StabilitySelection">[docs]</a><span class="k">class</span> <span class="nc">StabilitySelection</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="StabilitySelection"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection">[docs]</a><span class="k">class</span> <span class="nc">StabilitySelection</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Stability selection fits the estimator `base_estimator` on bootstrap samples of the original data set, for</span>
 <span class="sd">    different values of the regularization parameter for `base_estimator`. Variables that reliably get selected by the</span>
 <span class="sd">    model in these bootstrap samples are considered to be stable variables.</span>
@@ -346,7 +348,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pre_dispatch</span> <span class="o">=</span> <span class="n">pre_dispatch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
 
-<div class="viewcode-block" id="StabilitySelection.fit"><a class="viewcode-back" href="../../template.html#stability_selection.stability_selection.StabilitySelection.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="StabilitySelection.fit"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the stability selection model on the given data.</span>
 
 <span class="sd">        Parameters</span>
@@ -399,7 +401,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stability_scores_</span> <span class="o">=</span> <span class="n">stability_scores</span></div>
         <span class="k">return</span> <span class="bp">self</span>
 
-<div class="viewcode-block" id="StabilitySelection.get_support"><a class="viewcode-back" href="../../template.html#stability_selection.stability_selection.StabilitySelection.get_support">[docs]</a>    <span class="k">def</span> <span class="nf">get_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StabilitySelection.get_support"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.get_support">[docs]</a>    <span class="k">def</span> <span class="nf">get_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a mask, or integer index, of the features selected</span>
 
 <span class="sd">        Parameters</span>
@@ -433,7 +435,7 @@
 </div>
         <span class="k">return</span> <span class="n">mask</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">indices</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="StabilitySelection.transform"><a class="viewcode-back" href="../../template.html#stability_selection.stability_selection.StabilitySelection.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StabilitySelection.transform"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Reduce X to the selected features.</span>
 
 <span class="sd">        Parameters</span>
@@ -476,7 +478,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Vighnesh Birodkar.
+        &copy; Copyright 2018, Thomas Huijskens.
 
     </p>
   </div>
