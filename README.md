@@ -1,7 +1,7 @@
 # project-template - A template for scikit-learn extensions
 
 [![Travis Status](https://travis-ci.org/thuijskens/stability-selection.svg?branch=master)](https://travis-ci.org/thuijskens/stability-selection)
-[![Coveralls Status](https://coveralls.io/repos/thuijskens/stability-selection/badge.svg?branch=master&service=github)](https://coveralls.io/r/thuijskens/stability-selection)
+[![Coverage Status](https://coveralls.io/repos/github/thuijskens/stability-selection/badge.svg?branch=master)](https://coveralls.io/github/thuijskens/stability-selection?branch=master)
 [![CircleCI Status](https://circleci.com/gh/thuijskens/stability-selection.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/thuijskens/stability-selection/tree/master)
 
 **project-template** is a template project for 
