@@ -190,24 +190,20 @@ interested to determine whether there exists a <img class="math" src="_images/ma
 </div></blockquote>
 </li>
 <li><p class="first">Given the selection sets from each subsample, calculate the empirical selection probability for each model component:</p>
+<p><img class="math" src="_images/math/5b6a265c077b34af0bb7f52caf13ea60a1f3516d.png" alt="\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}."/></p>
+</li>
+<li><p class="first">The selection probability for component <img class="math" src="_images/math/0b7c1e16a3a8a849bb8ffdcdbf86f65fd1f30438.png" alt="k"/> is its probability of being selected by the algorithm.</p>
 </li>
 </ol>
 </div></blockquote>
 </li>
+<li><p class="first">Given the selection probabilities for each component and for each value of <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>, construct the
+stable set according to the following definition:</p>
+<p><img class="math" src="_images/math/8c78fc50535e25606f69b9990e031ddc3f84e579.png" alt="\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}."/></p>
+<p>where <img class="math" src="_images/math/f98f84ab385f682a474b3780da13ce8ecf346027.png" alt="\pi_\text{thr}"/> is a predefined threshold.</p>
+</li>
 </ol>
-<div class="math">
-<p><img src="_images/math/9f3ea3b79453681c11ac4fba8e2943fc9507e215.png" alt="\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.
-
-c. The selection probability for component :math:`k` is its probability of being selected by the algorithm."/></p>
-</div><ol class="arabic simple" start="3">
-<li>Given the selection probabilities for each component and for each value of <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>, construct the
-stable set according to the following definition:</li>
-</ol>
-<div class="math">
-<p><img src="_images/math/f565aec7e7e9b44a29f3fbf3d82837e342dd64d5.png" alt="\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}.
-
-where :math:`\pi_\text{thr}` is a predefined threshold."/></p>
-</div><p>This algorithm identifies a set of “stable” variables that are selected with high probability.</p>
+<p>This algorithm identifies a set of “stable” variables that are selected with high probability.</p>
 <blockquote>
 <div><div class="toctree-wrapper compound">
 <ul>
