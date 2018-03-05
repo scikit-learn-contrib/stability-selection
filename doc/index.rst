@@ -36,16 +36,14 @@ Sability selection works as follows:
 
     b. Given the selection sets from each subsample, calculate the empirical selection probability for each model component:
 
-.. math::
-    \hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.
+       :math:`\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.`
 
     c. The selection probability for component :math:`k` is its probability of being selected by the algorithm.
 
 3. Given the selection probabilities for each component and for each value of :math:`\lambda`, construct the
    stable set according to the following definition:
 
-.. math::
-    \hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}.
+   :math:`\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}.`
 
    where :math:`\pi_\text{thr}` is a predefined threshold.
 
