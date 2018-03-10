@@ -59,7 +59,7 @@ def _fit_bootstrap_sample(base_estimator, X, y, alpha, threshold=None, random_st
     """
     n_samples = X.shape[0]
     bootstrap = sample_without_replacement(n_samples, n_samples // 2, random_state=random_state)
-    X_train, y_train = X[bootstrap, :], y[bootstrap]
+    X_train, y_train = X[safe_mask(X, bootstrap), :], y[bootstrap]
 
     estimator = base_estimator.steps[-1][1]
 
@@ -188,17 +188,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         self.pre_dispatch = pre_dispatch
         self.random_state = random_state
 
-    def fit(self, X, y):
-        """Fit the stability selection model on the given data.
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape = [n_samples, n_features]
-            The training input samples.
-
-        y : array-like, shape = [n_samples]
-            The target values.
-        """
+    def _validate_input(self, X, y):
         if not isinstance(self.n_bootstrap_iterations, int):
             raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
 
@@ -213,6 +203,20 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         if self.alphas is None:
             self.alphas = np.logspace(-5, -2, 25)
+
+    def fit(self, X, y):
+        """Fit the stability selection model on the given data.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape = [n_samples, n_features]
+            The training input samples.
+
+        y : array-like, shape = [n_samples]
+            The target values.
+        """
+
+        self._validate_input(X, y)
 
         X, y = check_X_y(X, y)
         n_samples, n_variables = X.shape
