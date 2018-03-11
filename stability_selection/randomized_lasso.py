@@ -12,8 +12,10 @@ References
 
 """
 
+from scipy import sparse
+from scipy.sparse import issparse
+
 from sklearn.linear_model import LogisticRegression, Lasso
-from sklearn.linear_model.base import _rescale_data
 from sklearn.utils import check_X_y, check_random_state
 
 __all__ = ['RandomizedLogisticRegression', 'RandomizedLasso']
@@ -121,7 +123,13 @@ class RandomizedLasso(Lasso):
         weakness = 1. - self.weakness
         random_state = check_random_state(self.random_state)
 
-        sample_weight = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
-        X, y = _rescale_data(X, y, sample_weight)
+        weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
+
+        if issparse(X):
+            size = weights.shape[0]
+            weight_dia = sparse.dia_matrix((1 - weights, 0), (size, size))
+            X = X * weight_dia
+        else:
+            X *= (1 - weights)
 
         return self.fit(X, y)
