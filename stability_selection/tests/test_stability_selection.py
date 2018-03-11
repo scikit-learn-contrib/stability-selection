@@ -40,7 +40,7 @@ def test_stability_selection_classification():
     n, p, k = 1000, 1000, 5
 
     X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
-    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25))
+    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25), verbose=1)
     selector.fit(X, y)
 
     chosen_betas = selector.get_support(indices=True)
