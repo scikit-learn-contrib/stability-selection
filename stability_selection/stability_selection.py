@@ -96,18 +96,17 @@ def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs)
     threshold = stability_selection.threshold if threshold_highlight is None else threshold_highlight
     paths_to_highlight = stability_selection.get_support(threshold=threshold)
 
+    x_grid = stability_selection.lambda_grid / np.max(stability_selection.lambda_grid)
+
     fig, ax = plt.subplots(1, 1, **kwargs)
-    ax.plot(stability_selection.lambda_grid,
-            stability_selection.stability_scores_[~paths_to_highlight].T, 'b-')
-    ax.plot(stability_selection.lambda_grid,
-            stability_selection.stability_scores_[paths_to_highlight].T, 'r-')
+    ax.plot(x_grid, stability_selection.stability_scores_[~paths_to_highlight].T, 'c.-')
+    ax.plot(x_grid, stability_selection.stability_scores_[paths_to_highlight].T, 'r-')
 
     if threshold is not None:
-        ax.plot(stability_selection.lambda_grid,
-                threshold * np.ones_like(stability_selection.lambda_grid), '--')
+        ax.plot(x_grid, threshold * np.ones_like(stability_selection.lambda_grid), 'b--')
 
     ax.set_ylabel('Stability score')
-    ax.set_xlabel('Lambda')
+    ax.set_xlabel('Lambda / max(Lambda)')
 
     fig.tight_layout()
 
@@ -197,7 +196,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         if not isinstance(self.n_bootstrap_iterations, int) or self.n_bootstrap_iterations <= 0:
             raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
 
-        if not isinstance(self.threshold, float) or not (0.0 < self.threshold < 1.0):
+        if not isinstance(self.threshold, float) or not (0.0 < self.threshold <= 1.0):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         if self.lambda_name not in self.base_estimator.get_params().keys():
@@ -269,7 +268,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             values are indices into the input feature vector.
         """
 
-        if threshold is not None and (not isinstance(threshold, float) or not (0.0 < threshold < 1.0)):
+        if threshold is not None and (not isinstance(threshold, float) or not (0.0 < threshold <= 1.0)):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
