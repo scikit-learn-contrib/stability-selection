@@ -48,7 +48,7 @@ def test_stability_selection_classification():
 
     assert_almost_equal(important_betas, chosen_betas)
     assert(X_r.shape == (n, k))
-    assert(selector.stability_scores_.shape == (p, selector.alphas.shape[0]))
+    assert(selector.stability_scores_.shape == (p, selector.lambda_grid.shape[0]))
 
 
 def test_stability_selection_regression():
