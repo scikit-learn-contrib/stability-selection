@@ -86,7 +86,7 @@ class RandomizedLogisticRegression(LogisticRegression):
         weakness = 1. - self.weakness
         random_state = check_random_state(self.random_state)
 
-        weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
+        weights = weakness * random_state.randint(0, 1 + 1, size=(n_features,))
         X_rescaled = _rescale_data(X, weights)
         return super(RandomizedLogisticRegression, self).fit(X_rescaled, y, sample_weight)
 
@@ -131,8 +131,8 @@ class RandomizedLasso(Lasso):
         y : array-like, shape = [n_samples]
             The target values.
         """
-        if not isinstance(self.weakness, float) or not (0.0 < self.weakness < 1.0):
-            raise ValueError('weakness should be a float in [0, 1), got %s' % self.weakness)
+        if not isinstance(self.weakness, float) or not (0.0 < self.weakness <= 1.0):
+            raise ValueError('weakness should be a float in (0, 1], got %s' % self.weakness)
 
         X, y = check_X_y(X, y)
 
