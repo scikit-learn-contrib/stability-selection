@@ -198,7 +198,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
 
         if not isinstance(self.threshold, float) or not (0.0 < self.threshold < 1.0):
-            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
+            raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         if self.lambda_name not in self.base_estimator.get_params().keys():
             raise ValueError('lambda_name is set to %s, but base_estimator %s does not have a parameter '
@@ -269,11 +269,8 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             values are indices into the input feature vector.
         """
 
-        if threshold is not None and not isinstance(threshold, float):
-            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
-
-        if threshold is not None and (threshold < 0.0 or threshold > 1.0):
-            raise ValueError('threshold should be a float in (0.0, 1.0], got %s' % self.threshold)
+        if threshold is not None and (not isinstance(threshold, float) or (0.0 < threshold < 1.0)):
+            raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
         mask = (self.stability_scores_.max(axis=1) > cutoff)
