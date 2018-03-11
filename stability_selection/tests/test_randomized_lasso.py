@@ -26,11 +26,11 @@ def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
 
 def test_randomized_lasso():
     n, p = 200, 200
-    rho = 0.7
+    rho = 0.6
     weakness = 0.2
 
     X, y = generate_experiment_data(n, p, rho)
-    lambda_grid = np.linspace(0.001, 0.5, num=100)
+    lambda_grid = np.linspace(0.01, 0.5, num=100)
 
     estimator = RandomizedLasso(weakness=weakness)
     selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',
