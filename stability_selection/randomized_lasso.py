@@ -26,11 +26,11 @@ def _rescale_data(X, weights):
     if issparse(X):
         size = weights.shape[0]
         weight_dia = sparse.dia_matrix((1 - weights, 0), (size, size))
-        X = X * weight_dia
+        X_rescaled = X * weight_dia
     else:
-        X *= (1 - weights)
+        X_rescaled = X * (1 - weights)
 
-    return X
+    return X_rescaled
 
 
 class RandomizedLogisticRegression(LogisticRegression):
@@ -88,7 +88,7 @@ class RandomizedLogisticRegression(LogisticRegression):
 
         weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
         X_rescaled = _rescale_data(X, weights)
-        return self.fit(X_rescaled, y, sample_weight)
+        return super(RandomizedLogisticRegression, self).fit(X_rescaled, y, sample_weight)
 
 
 class RandomizedLasso(Lasso):
@@ -147,11 +147,5 @@ class RandomizedLasso(Lasso):
         #             sample_weight=None, return_mean=False)
 
         # TODO: Check if this is a problem if it happens before standardization
-        if issparse(X):
-            size = weights.shape[0]
-            weight_dia = sparse.dia_matrix((1 - weights, 0), (size, size))
-            X = X * weight_dia
-        else:
-            X *= (1 - weights)
-
-        return self.fit(X, y)
+        X_rescaled = _rescale_data(X, weights)
+        return super(RandomizedLasso, self).fit(X_rescaled, y)
