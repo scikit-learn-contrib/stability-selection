@@ -33,7 +33,7 @@ def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
 
 if __name__ == '__main__':
     n, p = 200, 200
-    rho = 0.7
+    rho = 0.6
 
     X, y = generate_experiment_data()
     lambda_grid = np.linspace(0.001, 0.5, num=100)
