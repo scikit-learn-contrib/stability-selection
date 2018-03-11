@@ -33,14 +33,15 @@ def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
 
 if __name__ == '__main__':
     n, p = 200, 200
-    rho = 0.6
+    rho = 0.7
 
     X, y = generate_experiment_data()
+    lambda_grid = np.linspace(0.001, 0.5, num=100)
 
     for weakness in [0.2, 0.5, 1.0]:
         estimator = RandomizedLasso(weakness=weakness)
         selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',
-                                      lambda_grid=np.logspace(-3, 1, 50), verbose=1)
+                                      lambda_grid=lambda_grid, threshold=0.9, verbose=1)
         selector.fit(X, y)
 
         fig, ax = plot_stability_path(selector)
