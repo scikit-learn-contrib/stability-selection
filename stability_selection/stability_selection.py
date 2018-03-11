@@ -99,11 +99,13 @@ def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs)
     x_grid = stability_selection.lambda_grid / np.max(stability_selection.lambda_grid)
 
     fig, ax = plt.subplots(1, 1, **kwargs)
-    ax.plot(x_grid, stability_selection.stability_scores_[~paths_to_highlight].T, 'c.-')
-    ax.plot(x_grid, stability_selection.stability_scores_[paths_to_highlight].T, 'r-')
+    ax.plot(x_grid, stability_selection.stability_scores_[~paths_to_highlight].T, 'k:', linewidth=0.5)
+
+    if paths_to_highlight.any():
+        ax.plot(x_grid, stability_selection.stability_scores_[paths_to_highlight].T, 'r-', linewidth=0.5)
 
     if threshold is not None:
-        ax.plot(x_grid, threshold * np.ones_like(stability_selection.lambda_grid), 'b--')
+        ax.plot(x_grid, threshold * np.ones_like(stability_selection.lambda_grid), 'b--', linewidth=0.5)
 
     ax.set_ylabel('Stability score')
     ax.set_xlabel('Lambda / max(Lambda)')
