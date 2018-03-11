@@ -68,10 +68,14 @@ class RandomizedLogisticRegression(LogisticRegression):
         Parameters
         ----------
         X : {array-like, sparse matrix}, shape = [n_samples, n_features]
-         The training input samples.
+            The training input samples.
 
         y : array-like, shape = [n_samples]
-         The target values.
+            The target values.
+
+        sample_weight : array-like, shape (n_samples,) optional
+            Array of weights that are assigned to individual samples.
+            If not provided, then each sample is given unit weight.
         """
         if not isinstance(self.weakness, float) or not (0.0 < self.weakness <= 1.0):
             raise ValueError('weakness should be a float in (0, 1], got %s' % self.weakness)
@@ -122,10 +126,10 @@ class RandomizedLasso(Lasso):
         Parameters
         ----------
         X : {array-like, sparse matrix}, shape = [n_samples, n_features]
-         The training input samples.
+            The training input samples.
 
         y : array-like, shape = [n_samples]
-         The target values.
+            The target values.
         """
         if not isinstance(self.weakness, float) or not (0.0 < self.weakness < 1.0):
             raise ValueError('weakness should be a float in [0, 1), got %s' % self.weakness)
@@ -136,7 +140,7 @@ class RandomizedLasso(Lasso):
         weakness = 1. - self.weakness
         random_state = check_random_state(self.random_state)
 
-        weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
+        weights = weakness * random_state.randint(0, 1 + 1, size=(n_features,))
 
         # TODO: I am afraid this will do double normalization if set to true
         #X, y, _, _ = _preprocess_data(X, y, self.fit_intercept, normalize=self.normalize, copy=False,
