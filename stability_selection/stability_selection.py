@@ -269,7 +269,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             values are indices into the input feature vector.
         """
 
-        if threshold is not None and (not isinstance(threshold, float) or (0.0 < threshold < 1.0)):
+        if threshold is not None and (not isinstance(threshold, float) or not (0.0 < threshold < 1.0)):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
