@@ -40,7 +40,7 @@ def test_stability_selection_classification():
     n, p, k = 1000, 1000, 5
 
     X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
-    selector = StabilitySelection(alphas=np.logspace(-5, -1, 25))
+    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25))
     selector.fit(X, y)
 
     chosen_betas = selector.get_support(indices=True)
@@ -61,9 +61,9 @@ def test_stability_selection_regression():
         ('model', Lasso())
     ])
 
-    alphas_grid = np.logspace(-1, 1, num=10)
+    lambdas_grid = np.logspace(-1, 1, num=10)
 
-    selector = StabilitySelection(base_estimator=base_estimator, alphas=alphas_grid)
+    selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__alpha', lambda_grid=lambdas_grid)
     selector.fit(X, y)
 
     chosen_betas = selector.get_support(indices=True)
