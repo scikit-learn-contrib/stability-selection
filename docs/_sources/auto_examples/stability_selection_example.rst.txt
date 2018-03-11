@@ -15,6 +15,9 @@ An example plot of the stability scores for each variable after fitting :class:`
 
     import numpy as np
 
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import StandardScaler
     from sklearn.utils import check_random_state
     from stability_selection import StabilitySelection, plot_stability_path
 
@@ -38,7 +41,13 @@ An example plot of the stability scores for each variable after fitting :class:`
         n, p, k = 500, 1000, 5
 
         X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
-        selector = StabilitySelection(alphas=np.logspace(-5, -1, 50))
+
+        base_estimator = Pipeline([
+            ('scaler', StandardScaler()),
+            ('model', LogisticRegression(penalty='l1'))
+        ])
+        selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',
+                                      lambda_grid=np.logspace(-5, -1, 50))
         selector.fit(X, y)
 
         fig, ax = plot_stability_path(selector)

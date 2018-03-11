@@ -168,7 +168,7 @@
 </dl>
 <dl class="class">
 <dt id="stability_selection.stability_selection.StabilitySelection">
-<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=Pipeline(memory=None</em>, <em>steps=[('scaler'</em>, <em>StandardScaler(copy=True</em>, <em>with_mean=True</em>, <em>with_std=True))</em>, <em>('model'</em>, <em>LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False))])</em>, <em>alphas=None</em>, <em>n_bootstrap_iterations=100</em>, <em>threshold=0.6</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False)</em>, <em>lambda_name='C'</em>, <em>lambda_grid=None</em>, <em>n_bootstrap_iterations=100</em>, <em>threshold=0.6</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stability selection fits the estimator <cite>base_estimator</cite> on bootstrap samples of the original data set, for
 different values of the regularization parameter for <cite>base_estimator</cite>. Variables that reliably get selected by the
 model in these bootstrap samples are considered to be stable variables.</p>
@@ -176,12 +176,15 @@ model in these bootstrap samples are considered to be stable variables.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_estimator</strong> : object</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>base_estimator</strong> : object.</p>
 <blockquote>
-<div><p>The base estimator used for stability selection. The estimator must have either a
-<code class="docutils literal notranslate"><span class="pre">C</span></code> or <code class="docutils literal notranslate"><span class="pre">alpha</span></code> parameter.</p>
+<div><p>The base estimator used for stability selection.</p>
 </div></blockquote>
-<p><strong>alphas</strong> : array-like.</p>
+<p><strong>lambda_name</strong> : str.</p>
+<blockquote>
+<div><p>The name of the penalizatin parameter for the estimator <cite>base_estimator</cite>.</p>
+</div></blockquote>
+<p><strong>lambda_grid</strong> : array-like.</p>
 <blockquote>
 <div><p>Grid of values of the penalization parameter to iterate over.</p>
 </div></blockquote>
