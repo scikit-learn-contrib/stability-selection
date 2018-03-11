@@ -50,4 +50,5 @@ def test_check_wrong_lambda_name():
 
 def test_automatic_lambda_grid():
     selector = StabilitySelection()
+    selector._validate_input()
     assert_array_equal(np.logspace(-5, -2, 25), selector.lambda_grid)
