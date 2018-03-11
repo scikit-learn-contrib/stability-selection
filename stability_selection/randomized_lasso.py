@@ -16,9 +16,22 @@ from scipy import sparse
 from scipy.sparse import issparse
 
 from sklearn.linear_model import LogisticRegression, Lasso
+from sklearn.linear_model.base import _preprocess_data
+from sklearn.preprocessing import
 from sklearn.utils import check_X_y, check_random_state
 
 __all__ = ['RandomizedLogisticRegression', 'RandomizedLasso']
+
+
+def _rescale_data(X, weights):
+    if issparse(X):
+        size = weights.shape[0]
+        weight_dia = sparse.dia_matrix((1 - weights, 0), (size, size))
+        X = X * weight_dia
+    else:
+        X *= (1 - weights)
+
+    return X
 
 
 class RandomizedLogisticRegression(LogisticRegression):
@@ -50,7 +63,7 @@ class RandomizedLogisticRegression(LogisticRegression):
             warm_start=warm_start, n_jobs=n_jobs
         )
 
-    def fit(self, X, y):
+    def fit(self, X, y, sample_weight=None):
         """Fit the model according to the given training data.
 
         Parameters
@@ -70,8 +83,9 @@ class RandomizedLogisticRegression(LogisticRegression):
         weakness = 1. - self.weakness
         random_state = check_random_state(self.random_state)
 
-        sample_weight = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
-        return self.fit(X, y, sample_weight=sample_weight)
+        weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
+        X_rescaled = _rescale_data(X, weights)
+        return self.fit(X_rescaled, y, sample_weight)
 
 
 class RandomizedLasso(Lasso):
@@ -125,6 +139,11 @@ class RandomizedLasso(Lasso):
 
         weights = (1 - weakness * random_state.randint(0, 1 + 1, size=(n_features,)))
 
+        # TODO: I am afraid this will do double normalization if set to true
+        #X, y, _, _ = _preprocess_data(X, y, self.fit_intercept, normalize=self.normalize, copy=False,
+        #             sample_weight=None, return_mean=False)
+
+        # TODO: Check if this is a problem if it happens before standardization
         if issparse(X):
             size = weights.shape[0]
             weight_dia = sparse.dia_matrix((1 - weights, 0), (size, size))
