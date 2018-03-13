@@ -39,7 +39,7 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="stability-selection 0.1.0 documentation" href="../index.html"/>
         <link rel="up" title="General examples" href="index.html"/>
-        <link rel="prev" title="Randomized LASSO example" href="randomized_lasso_example.html"/> 
+        <link rel="prev" title="Randomized LASSO example" href="plot_randomized_lasso_path.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -95,7 +95,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">General examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="randomized_lasso_example.html">Randomized LASSO example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_randomized_lasso_path.html">Randomized LASSO example</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Plotting stability scores</a></li>
 </ul>
 </li>
@@ -151,7 +151,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/auto_examples/stability_selection_example.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/auto_examples/plot_stability_scores.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,8 +165,22 @@
            <div itemprop="articleBody">
             
   <div class="section" id="plotting-stability-scores">
-<span id="sphx-glr-auto-examples-stability-selection-example-py"></span><h1>Plotting stability scores<a class="headerlink" href="#plotting-stability-scores" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-auto-examples-plot-stability-scores-py"></span><h1>Plotting stability scores<a class="headerlink" href="#plotting-stability-scores" title="Permalink to this headline">¶</a></h1>
 <p>An example plot of the stability scores for each variable after fitting <a class="reference internal" href="../stability_selection.html#stability_selection.stability_selection.StabilitySelection" title="stability_selection.stability_selection.StabilitySelection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stability_selection.stability_selection.StabilitySelection</span></code></a></p>
+<img alt="../_images/sphx_glr_plot_stability_scores_001.png" class="align-center" src="../_images/sphx_glr_plot_stability_scores_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Selected</span> <span class="n">variables</span> <span class="n">are</span><span class="p">:</span>
+<span class="o">-----------------------</span>
+<span class="n">Variable</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">180</span><span class="p">],</span> <span class="n">score</span> <span class="mf">0.840</span>
+<span class="n">Variable</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">495</span><span class="p">],</span> <span class="n">score</span> <span class="mf">1.000</span>
+<span class="n">Variable</span> <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">523</span><span class="p">],</span> <span class="n">score</span> <span class="mf">1.000</span>
+<span class="n">Variable</span> <span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="mi">524</span><span class="p">],</span> <span class="n">score</span> <span class="mf">1.000</span>
+<span class="n">Variable</span> <span class="mi">5</span><span class="p">:</span> <span class="p">[</span><span class="mi">647</span><span class="p">],</span> <span class="n">score</span> <span class="mf">0.990</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
@@ -217,12 +231,12 @@
         <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Variable </span><span class="si">%d</span><span class="s1">: [</span><span class="si">%d</span><span class="s1">], score </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 1 minutes  41.265 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/stability_selection_example.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">stability_selection_example.py</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_stability_scores.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_stability_scores.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/stability_selection_example.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">stability_selection_example.ipynb</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_stability_scores.ipynb" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_stability_scores.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -238,7 +252,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="randomized_lasso_example.html" class="btn btn-neutral" title="Randomized LASSO example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="plot_randomized_lasso_path.html" class="btn btn-neutral" title="Randomized LASSO example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

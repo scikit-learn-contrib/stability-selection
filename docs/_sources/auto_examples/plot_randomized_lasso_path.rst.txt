@@ -1,0 +1,420 @@
+
+
+.. _sphx_glr_auto_examples_plot_randomized_lasso_path.py:
+
+
+===========================
+Randomized LASSO example
+===========================
+
+An example plot of the stability scores for each variable after fitting :class:`stability_selection.StabilitySelection`
+with :class:`stability_selection.RandomizedLasso`
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_randomized_lasso_path_001.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_randomized_lasso_path_002.png
+            :scale: 47
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_randomized_lasso_path_003.png
+            :scale: 47
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Fitting estimator for lambda = 0.00100 (1 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.00604 (2 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01108 (3 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01612 (4 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02116 (5 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02620 (6 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03124 (7 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03628 (8 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04132 (9 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04636 (10 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05140 (11 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05644 (12 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06148 (13 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06653 (14 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07157 (15 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07661 (16 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08165 (17 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08669 (18 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09173 (19 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09677 (20 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10181 (21 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10685 (22 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11189 (23 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11693 (24 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12197 (25 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12701 (26 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13205 (27 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13709 (28 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14213 (29 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14717 (30 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15221 (31 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15725 (32 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16229 (33 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16733 (34 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17237 (35 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17741 (36 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18245 (37 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18749 (38 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19254 (39 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19758 (40 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20262 (41 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20766 (42 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21270 (43 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21774 (44 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22278 (45 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22782 (46 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23286 (47 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23790 (48 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24294 (49 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24798 (50 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25302 (51 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25806 (52 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26310 (53 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26814 (54 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27318 (55 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27822 (56 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28326 (57 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28830 (58 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29334 (59 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29838 (60 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30342 (61 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30846 (62 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31351 (63 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31855 (64 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32359 (65 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32863 (66 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33367 (67 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33871 (68 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34375 (69 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34879 (70 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35383 (71 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35887 (72 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36391 (73 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36895 (74 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37399 (75 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37903 (76 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38407 (77 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38911 (78 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39415 (79 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39919 (80 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40423 (81 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40927 (82 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41431 (83 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41935 (84 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42439 (85 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42943 (86 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43447 (87 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43952 (88 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44456 (89 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44960 (90 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45464 (91 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45968 (92 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46472 (93 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46976 (94 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47480 (95 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47984 (96 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48488 (97 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48992 (98 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.49496 (99 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.50000 (100 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.00100 (1 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.00604 (2 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01108 (3 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01612 (4 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02116 (5 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02620 (6 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03124 (7 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03628 (8 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04132 (9 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04636 (10 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05140 (11 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05644 (12 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06148 (13 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06653 (14 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07157 (15 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07661 (16 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08165 (17 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08669 (18 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09173 (19 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09677 (20 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10181 (21 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10685 (22 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11189 (23 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11693 (24 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12197 (25 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12701 (26 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13205 (27 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13709 (28 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14213 (29 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14717 (30 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15221 (31 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15725 (32 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16229 (33 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16733 (34 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17237 (35 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17741 (36 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18245 (37 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18749 (38 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19254 (39 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19758 (40 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20262 (41 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20766 (42 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21270 (43 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21774 (44 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22278 (45 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22782 (46 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23286 (47 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23790 (48 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24294 (49 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24798 (50 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25302 (51 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25806 (52 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26310 (53 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26814 (54 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27318 (55 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27822 (56 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28326 (57 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28830 (58 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29334 (59 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29838 (60 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30342 (61 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30846 (62 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31351 (63 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31855 (64 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32359 (65 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32863 (66 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33367 (67 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33871 (68 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34375 (69 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34879 (70 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35383 (71 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35887 (72 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36391 (73 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36895 (74 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37399 (75 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37903 (76 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38407 (77 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38911 (78 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39415 (79 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39919 (80 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40423 (81 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40927 (82 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41431 (83 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41935 (84 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42439 (85 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42943 (86 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43447 (87 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43952 (88 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44456 (89 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44960 (90 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45464 (91 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45968 (92 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46472 (93 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46976 (94 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47480 (95 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47984 (96 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48488 (97 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48992 (98 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.49496 (99 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.50000 (100 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.00100 (1 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.00604 (2 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01108 (3 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.01612 (4 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02116 (5 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.02620 (6 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03124 (7 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.03628 (8 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04132 (9 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.04636 (10 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05140 (11 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.05644 (12 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06148 (13 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.06653 (14 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07157 (15 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.07661 (16 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08165 (17 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.08669 (18 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09173 (19 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.09677 (20 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10181 (21 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.10685 (22 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11189 (23 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.11693 (24 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12197 (25 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.12701 (26 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13205 (27 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.13709 (28 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14213 (29 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.14717 (30 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15221 (31 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.15725 (32 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16229 (33 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.16733 (34 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17237 (35 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.17741 (36 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18245 (37 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.18749 (38 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19254 (39 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.19758 (40 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20262 (41 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.20766 (42 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21270 (43 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.21774 (44 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22278 (45 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.22782 (46 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23286 (47 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.23790 (48 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24294 (49 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.24798 (50 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25302 (51 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.25806 (52 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26310 (53 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.26814 (54 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27318 (55 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.27822 (56 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28326 (57 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.28830 (58 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29334 (59 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.29838 (60 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30342 (61 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.30846 (62 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31351 (63 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.31855 (64 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32359 (65 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.32863 (66 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33367 (67 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.33871 (68 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34375 (69 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.34879 (70 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35383 (71 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.35887 (72 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36391 (73 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.36895 (74 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37399 (75 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.37903 (76 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38407 (77 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.38911 (78 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39415 (79 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.39919 (80 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40423 (81 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.40927 (82 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41431 (83 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.41935 (84 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42439 (85 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.42943 (86 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43447 (87 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.43952 (88 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44456 (89 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.44960 (90 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45464 (91 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.45968 (92 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46472 (93 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.46976 (94 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47480 (95 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.47984 (96 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48488 (97 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.48992 (98 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.49496 (99 / 100) on 100 bootstrap samples
+    Fitting estimator for lambda = 0.50000 (100 / 100) on 100 bootstrap samples
+
+
+
+
+|
+
+
+.. code-block:: python
+
+
+    import numpy as np
+
+    from sklearn.utils import check_random_state
+    from stability_selection import StabilitySelection, RandomizedLasso, plot_stability_path
+
+
+    def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
+        rng = check_random_state(random_state)
+
+        sigma = np.eye(p)
+        sigma[0, 2] = rho
+        sigma[2, 0] = rho
+        sigma[1, 2] = rho
+        sigma[2, 1] = rho
+
+        X = rng.multivariate_normal(mean=np.zeros(p), cov=sigma, size=(n,))
+        beta = np.zeros(p)
+        beta[:2] = 1.0
+        epsilon = rng.normal(0.0, 0.25, size=(n,))
+
+        y = np.matmul(X, beta) + epsilon
+
+        return X, y
+
+
+    if __name__ == '__main__':
+        n, p = 200, 200
+        rho = 0.6
+
+        X, y = generate_experiment_data()
+        lambda_grid = np.linspace(0.001, 0.5, num=100)
+
+        for weakness in [0.2, 0.5, 1.0]:
+            estimator = RandomizedLasso(weakness=weakness)
+            selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',
+                                          lambda_grid=lambda_grid, threshold=0.9, verbose=1)
+            selector.fit(X, y)
+
+            fig, ax = plot_stability_path(selector)
+            fig.show()
+
+
+
+
+
+
+
+**Total running time of the script:** ( 1 minutes  31.895 seconds)
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: plot_randomized_lasso_path.py <plot_randomized_lasso_path.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: plot_randomized_lasso_path.ipynb <plot_randomized_lasso_path.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

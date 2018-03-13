@@ -15,9 +15,9 @@ Introductory examples.
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_randomized_lasso_example_thumb.png
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_randomized_lasso_path_thumb.png
 
-        :ref:`sphx_glr_auto_examples_randomized_lasso_example.py`
+        :ref:`sphx_glr_auto_examples_plot_randomized_lasso_path.py`
 
 .. raw:: html
 
@@ -27,7 +27,7 @@ Introductory examples.
 .. toctree::
    :hidden:
 
-   /auto_examples/randomized_lasso_example
+   /auto_examples/plot_randomized_lasso_path
 
 .. raw:: html
 
@@ -35,9 +35,9 @@ Introductory examples.
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_stability_selection_example_thumb.png
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_stability_scores_thumb.png
 
-        :ref:`sphx_glr_auto_examples_stability_selection_example.py`
+        :ref:`sphx_glr_auto_examples_plot_stability_scores.py`
 
 .. raw:: html
 
@@ -47,7 +47,7 @@ Introductory examples.
 .. toctree::
    :hidden:
 
-   /auto_examples/stability_selection_example
+   /auto_examples/plot_stability_scores
 .. raw:: html
 
     <div style='clear:both'></div>

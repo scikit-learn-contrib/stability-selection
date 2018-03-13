@@ -1,5 +1,5 @@
-StabilitySelection
-==================
+Stability selection
+===================
 
 The documentation of the stability_selection module.
 

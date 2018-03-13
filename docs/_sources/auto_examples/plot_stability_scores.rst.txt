@@ -1,6 +1,6 @@
 
 
-.. _sphx_glr_auto_examples_stability_selection_example.py:
+.. _sphx_glr_auto_examples_plot_stability_scores.py:
 
 
 ===========================
@@ -9,6 +9,29 @@ Plotting stability scores
 
 An example plot of the stability scores for each variable after fitting :class:`stability_selection.stability_selection.StabilitySelection`
 
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_stability_scores_001.png
+    :align: center
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out::
+
+    Selected variables are:
+    -----------------------
+    Variable 1: [180], score 0.840
+    Variable 2: [495], score 1.000
+    Variable 3: [523], score 1.000
+    Variable 4: [524], score 1.000
+    Variable 5: [647], score 0.990
+
+
+
+
+|
 
 
 .. code-block:: python
@@ -62,7 +85,7 @@ An example plot of the stability scores for each variable after fitting :class:`
         for idx, (variable, score) in enumerate(zip(selected_variables, selected_scores[selected_variables])):
             print('Variable %d: [%d], score %.3f' % (idx + 1, variable, score))
 
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
+**Total running time of the script:** ( 1 minutes  41.265 seconds)
 
 
 
@@ -73,13 +96,13 @@ An example plot of the stability scores for each variable after fitting :class:`
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: stability_selection_example.py <stability_selection_example.py>`
+     :download:`Download Python source code: plot_stability_scores.py <plot_stability_scores.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: stability_selection_example.ipynb <stability_selection_example.ipynb>`
+     :download:`Download Jupyter notebook: plot_stability_scores.ipynb <plot_stability_scores.ipynb>`
 
 
 .. only:: html
