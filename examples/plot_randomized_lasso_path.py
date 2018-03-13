@@ -3,7 +3,8 @@
 Randomized LASSO example
 ===========================
 
-An example plot of the stability scores for each variable after fitting :class:`stability_selection.stability_selection.StabilitySelection`
+An example plot of the stability scores for each variable after fitting :class:`stability_selection.StabilitySelection`
+with :class:`stability_selection.RandomizedLasso`
 """
 
 import numpy as np
