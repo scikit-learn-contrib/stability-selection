@@ -85,7 +85,7 @@ An example plot of the stability scores for each variable after fitting :class:`
         for idx, (variable, score) in enumerate(zip(selected_variables, selected_scores[selected_variables])):
             print('Variable %d: [%d], score %.3f' % (idx + 1, variable, score))
 
-**Total running time of the script:** ( 1 minutes  41.265 seconds)
+**Total running time of the script:** ( 1 minutes  36.724 seconds)
 
 
 
