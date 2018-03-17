@@ -24,6 +24,9 @@ python setup.py install
 ```python
 import numpy as np
 
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.utils import check_random_state
 from stability_selection import StabilitySelection
 
@@ -46,8 +49,12 @@ def _generate_dummy_classification_data(p=1000, n=1000, k=5, random_state=123321
 n, p, k = 500, 1000, 5
 
 X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
-selector = StabilitySelection(alphas=np.logspace(-5, -1, 50))
-selector.fit(X, y)
+base_estimator = Pipeline([
+    ('scaler', StandardScaler()),
+    ('model', LogisticRegression(penalty='l1'))
+])
+selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',
+                              lambda_grid=np.logspace(-5, -1, 50))
 
 print(selector.get_support(indices=True))
 ```
