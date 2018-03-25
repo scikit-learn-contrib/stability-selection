@@ -393,7 +393,7 @@ with :class:`stability_selection.RandomizedLasso`
 
 
 
-**Total running time of the script:** ( 1 minutes  30.749 seconds)
+**Total running time of the script:** ( 1 minutes  33.681 seconds)
 
 
 

@@ -247,8 +247,8 @@
         <span class="n">random_state</span> <span class="o">=</span> <span class="n">check_random_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
 
         <span class="n">weights</span> <span class="o">=</span> <span class="n">weakness</span> <span class="o">*</span> <span class="n">random_state</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
-        <span class="n">X_rescaled</span> <span class="o">=</span> <span class="n">_rescale_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span></div></div>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">RandomizedLogisticRegression</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_rescaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
+        <span class="n">X_rescaled</span> <span class="o">=</span> <span class="n">_rescale_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">RandomizedLogisticRegression</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_rescaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="RandomizedLasso"><a class="viewcode-back" href="../../randomized_lasso.html#stability_selection.randomized_lasso.RandomizedLasso">[docs]</a><span class="k">class</span> <span class="nc">RandomizedLasso</span><span class="p">(</span><span class="n">Lasso</span><span class="p">):</span>
@@ -307,8 +307,8 @@
         <span class="c1">#             sample_weight=None, return_mean=False)</span>
 
         <span class="c1"># TODO: Check if this is a problem if it happens before standardization</span>
-        <span class="n">X_rescaled</span> <span class="o">=</span> <span class="n">_rescale_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span></div></div>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">RandomizedLasso</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_rescaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">X_rescaled</span> <span class="o">=</span> <span class="n">_rescale_data</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">RandomizedLasso</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_rescaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

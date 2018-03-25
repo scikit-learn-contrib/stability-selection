@@ -181,12 +181,19 @@
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">safe_mask</span><span class="p">,</span> <span class="n">check_random_state</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.random</span> <span class="k">import</span> <span class="n">sample_without_replacement</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="k">import</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
 
+<span class="kn">from</span> <span class="nn">.bootstrap</span> <span class="k">import</span> <span class="n">bootstrap_without_replacement</span><span class="p">,</span> <span class="n">complementary_pairs_bootstrap</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;StabilitySelection&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_stability_path&#39;</span><span class="p">]</span>
+
+<span class="n">DEFAULT_LAMBDA_GRID</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">BOOTSTRAP_FUNC_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="n">bootstrap_without_replacement</span><span class="p">,</span>
+    <span class="s1">&#39;complementary_pairs&#39;</span><span class="p">:</span> <span class="n">complementary_pairs_bootstrap</span>
+<span class="p">}</span>
 
 
 <span class="k">def</span> <span class="nf">_return_estimator_from_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">):</span>
@@ -197,7 +204,17 @@
         <span class="k">return</span> <span class="n">pipeline</span>
 
 
-<span class="k">def</span> <span class="nf">_fit_bootstrap_sample</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lambda_name</span><span class="p">,</span> <span class="n">lambda_value</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bootstrap_generator</span><span class="p">(</span><span class="n">n_bootstrap_iterations</span><span class="p">,</span> <span class="n">bootstrap_func</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_subsamples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bootstrap_iterations</span><span class="p">):</span>
+        <span class="n">subsample</span> <span class="o">=</span> <span class="n">bootstrap_func</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_subsamples</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsample</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">subsample</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">item</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">subsample</span>
+
+
+<span class="k">def</span> <span class="nf">_fit_bootstrap_sample</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lambda_name</span><span class="p">,</span> <span class="n">lambda_value</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fits base_estimator on a bootstrap sample of the original data, and returns a mas of the variables that are \</span>
 <span class="sd">    selected by the fitted model.</span>
@@ -219,17 +236,24 @@
 <span class="sd">    lambda_value : float</span>
 <span class="sd">        Value of the penalization parameter</span>
 
+<span class="sd">    threshold : string, float, optional default None</span>
+<span class="sd">        The threshold value to use for feature selection. Features whose</span>
+<span class="sd">        importance is greater or equal are kept while the others are</span>
+<span class="sd">        discarded. If &quot;median&quot; (resp. &quot;mean&quot;), then the ``threshold`` value is</span>
+<span class="sd">        the median (resp. the mean) of the feature importances. A scaling</span>
+<span class="sd">        factor (e.g., &quot;1.25*mean&quot;) may also be used. If None and if the</span>
+<span class="sd">        estimator has a parameter penalty set to l1, either explicitly</span>
+<span class="sd">        or implicitly (e.g, Lasso), the threshold used is 1e-5.</span>
+<span class="sd">        Otherwise, &quot;mean&quot; is used by default.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    selected_variables : array-like, shape = [n_features]</span>
 <span class="sd">        Boolean mask of selected variables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">sample_without_replacement</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">safe_mask</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">bootstrap</span><span class="p">),</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">bootstrap</span><span class="p">]</span>
 
     <span class="n">base_estimator</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">lambda_name</span><span class="p">:</span> <span class="n">lambda_value</span><span class="p">})</span>
-    <span class="n">base_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">base_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
     <span class="c1"># TODO: Reconsider if we really want to use SelectFromModel here or not</span>
     <span class="n">selector_model</span> <span class="o">=</span> <span class="n">_return_estimator_from_pipeline</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">)</span>
@@ -271,12 +295,12 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Lambda / max(Lambda)&#39;</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</div>
-    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
 
 
 <div class="viewcode-block" id="StabilitySelection"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection">[docs]</a><span class="k">class</span> <span class="nc">StabilitySelection</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Stability selection fits the estimator `base_estimator` on bootstrap samples of the original data set, for</span>
+    <span class="sd">&quot;&quot;&quot;Stability selection [1] fits the estimator `base_estimator` on bootstrap samples of the original data set, for</span>
 <span class="sd">    different values of the regularization parameter for `base_estimator`. Variables that reliably get selected by the</span>
 <span class="sd">    model in these bootstrap samples are considered to be stable variables.</span>
 
@@ -286,7 +310,7 @@
 <span class="sd">        The base estimator used for stability selection.</span>
 
 <span class="sd">    lambda_name : str.</span>
-<span class="sd">        The name of the penalizatin parameter for the estimator `base_estimator`.</span>
+<span class="sd">        The name of the penalization parameter for the estimator `base_estimator`.</span>
 
 <span class="sd">    lambda_grid : array-like.</span>
 <span class="sd">        Grid of values of the penalization parameter to iterate over.</span>
@@ -294,10 +318,23 @@
 <span class="sd">    n_bootstrap_iterations : integer.</span>
 <span class="sd">        Number of bootstrap samples to create.</span>
 
-<span class="sd">    threshold: float.</span>
+<span class="sd">    sample_fraction : float, optional</span>
+<span class="sd">        The fraction of samples to be used in each bootstrap sample.</span>
+<span class="sd">        Should be between 0 and 1. If 1, all samples are used.</span>
+
+<span class="sd">    threshold : float.</span>
 <span class="sd">        Threshold defining the minimum cutoff value for the stability scores.</span>
 
-<span class="sd">    bootstrap_threshold: string, float, optional default None</span>
+<span class="sd">    bootstrap_func : str or callable fun (default=bootstrap_without_replacement)</span>
+<span class="sd">        The function used to subsample the data. This parameter can be:</span>
+<span class="sd">            - A string, which must be one of</span>
+<span class="sd">                - &#39;subsample&#39;: For subsampling without replacement.</span>
+<span class="sd">                - &#39;complementary_pairs&#39;: For complementary pairs subsampling [2].</span>
+<span class="sd">            - A function that takes n_samples, and a random state</span>
+<span class="sd">              as inputs and returns a list of sample indices in the range</span>
+<span class="sd">              (0, n_samples-1). By default, indices are uniformly subsampled.</span>
+
+<span class="sd">    bootstrap_threshold : string, float, optional default None</span>
 <span class="sd">        The threshold value to use for feature selection. Features whose</span>
 <span class="sd">        importance is greater or equal are kept while the others are</span>
 <span class="sd">        discarded. If &quot;median&quot; (resp. &quot;mean&quot;), then the ``threshold`` value is</span>
@@ -339,15 +376,27 @@
 <span class="sd">    ----------</span>
 <span class="sd">    stability_scores_ : array, shape = [n_features, n_alphas]</span>
 <span class="sd">        Array of stability scores for each feature for each value of the penalization parameter.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the</span>
+<span class="sd">           Royal Statistical Society: Series B (Statistical Methodology), 72(4), pp.417-473.</span>
+<span class="sd">    .. [2] Shah, R.D. and Samworth, R.J., 2013. Variable selection with error control:</span>
+<span class="sd">           another look at stability selection. Journal of the Royal Statistical Society:</span>
+<span class="sd">           Series B (Statistical Methodology), 75(1), pp.55-80.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">),</span> <span class="n">lambda_name</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">lambda_grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">n_bootstrap_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
-                 <span class="n">bootstrap_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">n_bootstrap_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sample_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+                 <span class="n">bootstrap_func</span><span class="o">=</span><span class="n">bootstrap_without_replacement</span><span class="p">,</span> <span class="n">bootstrap_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lambda_name</span> <span class="o">=</span> <span class="n">lambda_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lambda_grid</span> <span class="o">=</span> <span class="n">lambda_grid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span> <span class="o">=</span> <span class="n">n_bootstrap_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_fraction</span> <span class="o">=</span> <span class="n">sample_fraction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span> <span class="o">=</span> <span class="n">bootstrap_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_threshold</span> <span class="o">=</span> <span class="n">bootstrap_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
@@ -356,7 +405,11 @@
 
     <span class="k">def</span> <span class="nf">_validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n_bootstrap_iterations should be a positive integer, got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;n_bootstrap_iterations should be a positive integer, got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_fraction</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fraction</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;sample_fraction should be a float in (0, 1], got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;threshold should be a float in (0, 1], got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
@@ -366,7 +419,16 @@
                              <span class="s1">&#39;with that name&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lambda_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lambda_grid</span> <span class="o">=</span> <span class="n">DEFAULT_LAMBDA_GRID</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BOOTSTRAP_FUNC_MAPPING</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bootstrap_func is set to </span><span class="si">%s</span><span class="s1">, but must be one of </span><span class="si">%s</span><span class="s1"> or a callable&#39;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span><span class="p">,</span> <span class="n">BOOTSTRAP_FUNC_MAPPING</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span> <span class="o">=</span> <span class="n">BOOTSTRAP_FUNC_MAPPING</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;bootstrap_func must be one of </span><span class="si">%s</span><span class="s1"> or a callable&#39;</span> <span class="o">%</span> <span class="n">BOOTSTRAP_FUNC_MAPPING</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
 <div class="viewcode-block" id="StabilitySelection.fit"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the stability selection model on the given data.</span>
@@ -384,6 +446,7 @@
 
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_variables</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">n_subsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_fraction</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">n_lambdas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">base_estimator</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="p">)</span>
@@ -395,17 +458,21 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting estimator for lambda = </span><span class="si">%.5f</span><span class="s2"> (</span><span class="si">%d</span><span class="s2"> / </span><span class="si">%d</span><span class="s2">) on </span><span class="si">%d</span><span class="s2"> bootstrap samples&quot;</span> <span class="o">%</span>
                       <span class="p">(</span><span class="n">lambda_value</span><span class="p">,</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_lambdas</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">))</span>
 
+            <span class="n">bootstrap_samples</span> <span class="o">=</span> <span class="n">_bootstrap_generator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_func</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span>
+                                                     <span class="n">n_subsamples</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
             <span class="n">selected_variables</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
                 <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
                 <span class="n">pre_dispatch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_dispatch</span>
-            <span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_bootstrap_sample</span><span class="p">)(</span><span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_name</span><span class="p">,</span> <span class="n">lambda_value</span><span class="p">,</span>
-                                             <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_threshold</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
-              <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bootstrap_iterations</span><span class="p">))</span>
+            <span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">_fit_bootstrap_sample</span><span class="p">)(</span><span class="n">clone</span><span class="p">(</span><span class="n">base_estimator</span><span class="p">),</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">safe_mask</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">subsample</span><span class="p">),</span> <span class="p">:],</span>
+                                             <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">[</span><span class="n">subsample</span><span class="p">],</span> <span class="n">lambda_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_name</span><span class="p">,</span> <span class="n">lambda_value</span><span class="o">=</span><span class="n">lambda_value</span><span class="p">,</span>
+                                             <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_threshold</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">subsample</span> <span class="ow">in</span> <span class="n">bootstrap_samples</span><span class="p">)</span>
 
             <span class="n">stability_scores</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">selected_variables</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stability_scores_</span> <span class="o">=</span> <span class="n">stability_scores</span></div>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stability_scores_</span> <span class="o">=</span> <span class="n">stability_scores</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="StabilitySelection.get_support"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.get_support">[docs]</a>    <span class="k">def</span> <span class="nf">get_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a mask, or integer index, of the features selected</span>
@@ -435,8 +502,8 @@
 
         <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">threshold</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stability_scores_</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">)</span>
-</div>
-        <span class="k">return</span> <span class="n">mask</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">indices</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">mask</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">indices</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="StabilitySelection.transform"><a class="viewcode-back" href="../../stability_selection.html#stability_selection.stability_selection.StabilitySelection.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Reduce X to the selected features.</span>
@@ -465,8 +532,8 @@
                  <span class="ne">UserWarning</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X has a different shape than during fitting.&quot;</span><span class="p">)</span></div></div>
-        <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">safe_mask</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mask</span><span class="p">)]</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;X has a different shape than during fitting.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">safe_mask</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mask</span><span class="p">)]</span></div></div>
 </pre></div>
 
            </div>

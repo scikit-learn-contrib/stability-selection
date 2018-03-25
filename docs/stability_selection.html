@@ -168,8 +168,8 @@
 </dl>
 <dl class="class">
 <dt id="stability_selection.stability_selection.StabilitySelection">
-<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False)</em>, <em>lambda_name='C'</em>, <em>lambda_grid=None</em>, <em>n_bootstrap_iterations=100</em>, <em>threshold=0.6</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stability selection fits the estimator <cite>base_estimator</cite> on bootstrap samples of the original data set, for
+<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False)</em>, <em>lambda_name='C'</em>, <em>lambda_grid=None</em>, <em>n_bootstrap_iterations=100</em>, <em>sample_fraction=0.5</em>, <em>threshold=0.6</em>, <em>bootstrap_func=&lt;function bootstrap_without_replacement&gt;</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stability selection [1] fits the estimator <cite>base_estimator</cite> on bootstrap samples of the original data set, for
 different values of the regularization parameter for <cite>base_estimator</cite>. Variables that reliably get selected by the
 model in these bootstrap samples are considered to be stable variables.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -182,7 +182,7 @@ model in these bootstrap samples are considered to be stable variables.</p>
 </div></blockquote>
 <p><strong>lambda_name</strong> : str.</p>
 <blockquote>
-<div><p>The name of the penalizatin parameter for the estimator <cite>base_estimator</cite>.</p>
+<div><p>The name of the penalization parameter for the estimator <cite>base_estimator</cite>.</p>
 </div></blockquote>
 <p><strong>lambda_grid</strong> : array-like.</p>
 <blockquote>
@@ -192,11 +192,37 @@ model in these bootstrap samples are considered to be stable variables.</p>
 <blockquote>
 <div><p>Number of bootstrap samples to create.</p>
 </div></blockquote>
-<p><strong>threshold: float.</strong></p>
+<p><strong>sample_fraction</strong> : float, optional</p>
+<blockquote>
+<div><p>The fraction of samples to be used in each bootstrap sample.
+Should be between 0 and 1. If 1, all samples are used.</p>
+</div></blockquote>
+<p><strong>threshold</strong> : float.</p>
 <blockquote>
 <div><p>Threshold defining the minimum cutoff value for the stability scores.</p>
 </div></blockquote>
-<p><strong>bootstrap_threshold: string, float, optional default None</strong></p>
+<p><strong>bootstrap_func</strong> : str or callable fun (default=bootstrap_without_replacement)</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>The function used to subsample the data. This parameter can be:</dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt>A string, which must be one of</dt>
+<dd><ul class="first last">
+<li>‘subsample’: For subsampling without replacement.</li>
+<li>‘complementary_pairs’: For complementary pairs subsampling [2].</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>A function that takes n_samples, and a random state
+as inputs and returns a list of sample indices in the range
+(0, n_samples-1). By default, indices are uniformly subsampled.</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>bootstrap_threshold</strong> : string, float, optional default None</p>
 <blockquote>
 <div><p>The threshold value to use for feature selection. Features whose
 importance is greater or equal are kept while the others are
@@ -245,6 +271,22 @@ by <cite>np.random</cite>.</p>
 </div></blockquote>
 </td>
 </tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R1]</a></td><td>Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the
+Royal Statistical Society: Series B (Statistical Methodology), 72(4), pp.417-473.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[R2]</a></td><td>Shah, R.D. and Samworth, R.J., 2013. Variable selection with error control:
+another look at stability selection. Journal of the Royal Statistical Society:
+Series B (Statistical Methodology), 75(1), pp.55-80.</td></tr>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
