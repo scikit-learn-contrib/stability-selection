@@ -299,7 +299,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                       (lambda_value, idx + 1, n_lambdas, self.n_bootstrap_iterations))
 
             bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, n_samples,
-                                                     random_state=self.random_state)
+                                                     random_state=random_state)
 
             selected_variables = Parallel(
                 n_jobs=self.n_jobs, verbose=self.verbose,
