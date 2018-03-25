@@ -306,7 +306,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                 pre_dispatch=self.pre_dispatch
             )(delayed(_fit_bootstrap_sample)(clone(base_estimator), X=X[safe_mask(X, subsample), :],
                                              y=y[subsample], lambda_name=self.lambda_name, lambda_value=lambda_value,
-                                             threshold=self.bootstrap_threshold, random_state=random_state)
+                                             threshold=self.bootstrap_threshold)
               for subsample in bootstrap_samples)
 
             stability_scores[:, idx] = np.vstack(selected_variables).mean(axis=0)
