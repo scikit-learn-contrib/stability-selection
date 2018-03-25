@@ -21,12 +21,19 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.utils import check_X_y, check_array, safe_mask, check_random_state
-from sklearn.utils.random import sample_without_replacement
 from sklearn.utils.validation import check_is_fitted
 from warnings import warn
 
+from .bootstrap import bootstrap_without_replacement, complementary_pairs_bootstrap
+
 
 __all__ = ['StabilitySelection', 'plot_stability_path']
+
+DEFAULT_LAMBDA_GRID = np.logspace(-5, -2, 25)
+BOOTSTRAP_FUNC_MAPPING = {
+    'subsample': bootstrap_without_replacement,
+    'complementary_pairs': complementary_pairs_bootstrap
+}
 
 
 def _return_estimator_from_pipeline(pipeline):
@@ -37,32 +44,14 @@ def _return_estimator_from_pipeline(pipeline):
         return pipeline
 
 
-def _default_bootstrap(n_samples, n_subsamples, random_state=None):
-    return sample_without_replacement(n_samples, n_subsamples, random_state=random_state)
-
-
-def _complementary_pairs_bootstrap(n_samples, n_subsamples, random_state=None):
-    subsample = _default_bootstrap(n_samples, n_subsamples, random_state)
-    all_samples = np.arange(n_samples)
-    complementary_subsample = np.setdiff1d(all_samples, subsample)
-
-    return subsample, complementary_subsample
-
-
-def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, n_samples, random_state=None):
+def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, n_samples, n_subsamples, random_state=None):
     for _ in range(n_bootstrap_iterations):
-        subsample = bootstrap_func(n_samples, n_samples // 2, random_state)
+        subsample = bootstrap_func(n_samples, n_subsamples, random_state)
         if isinstance(subsample, tuple):
             for item in subsample:
                 yield item
         else:
             yield subsample
-
-
-BOOTSTRAP_FUNC_MAPPING = {
-    'subsample': _default_bootstrap,
-    'complementary_pairs': _complementary_pairs_bootstrap
-}
 
 
 def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, threshold=None):
@@ -169,15 +158,19 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     n_bootstrap_iterations : integer.
         Number of bootstrap samples to create.
 
+    sample_fraction : float, optional
+        The fraction of samples to be used in each bootstrap sample.
+        Should be between 0 and 1. If 1, all samples are used.
+
     threshold : float.
         Threshold defining the minimum cutoff value for the stability scores.
 
-    bootstrap_func : str or callable fun (default=_default_bootstrap)
+    bootstrap_func : str or callable fun (default=bootstrap_without_replacement)
         The function used to subsample the data. This parameter can be:
             - A string, which must be one of
                 - 'subsample': For subsampling without replacement.
                 - 'complementary_pairs': For complementary pairs subsampling [2].
-            - A function that takes n_samples, n_subsamples, and a random state
+            - A function that takes n_samples, and a random state
               as inputs and returns a list of sample indices in the range
               (0, n_samples-1). By default, indices are uniformly subsampled.
 
@@ -234,12 +227,14 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
            Series B (Statistical Methodology), 75(1), pp.55-80.
     """
     def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C', lambda_grid=None,
-                 n_bootstrap_iterations=100, threshold=0.6, bootstrap_func=_default_bootstrap,
-                 bootstrap_threshold=None, verbose=0, n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
+                 n_bootstrap_iterations=100, sample_fraction=0.5, threshold=0.6,
+                 bootstrap_func=bootstrap_without_replacement, bootstrap_threshold=None, verbose=0,
+                 n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
         self.base_estimator = base_estimator
         self.lambda_name = lambda_name
         self.lambda_grid = lambda_grid
         self.n_bootstrap_iterations = n_bootstrap_iterations
+        self.sample_fraction = sample_fraction
         self.threshold = threshold
         self.bootstrap_func = bootstrap_func
         self.bootstrap_threshold = bootstrap_threshold
@@ -250,7 +245,11 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
     def _validate_input(self):
         if not isinstance(self.n_bootstrap_iterations, int) or self.n_bootstrap_iterations <= 0:
-            raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
+            raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' %
+                             self.n_bootstrap_iterations)
+
+        if not isinstance(self.sample_fraction, float) or not (0.0 < self.threshold <= 1.0):
+            raise ValueError('sample_fraction should be a float in (0, 1], got %s' % self.threshold)
 
         if not isinstance(self.threshold, float) or not (0.0 < self.threshold <= 1.0):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
@@ -260,7 +259,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                              'with that name' % (self.lambda_name, self.base_estimator.__class__.__name__))
 
         if self.lambda_grid is None:
-            self.lambda_grid = np.logspace(-5, -2, 25)
+            self.lambda_grid = DEFAULT_LAMBDA_GRID
 
         if isinstance(self.bootstrap_func, str):
             if self.bootstrap_func not in BOOTSTRAP_FUNC_MAPPING.keys():
@@ -287,6 +286,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         X, y = check_X_y(X, y)
         n_samples, n_variables = X.shape
+        n_subsamples = np.floor(self.sample_fraction * n_samples).astype(int)
         n_lambdas = self.lambda_grid.shape[0]
 
         base_estimator = clone(self.base_estimator)
@@ -299,7 +299,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                       (lambda_value, idx + 1, n_lambdas, self.n_bootstrap_iterations))
 
             bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, n_samples,
-                                                     random_state=random_state)
+                                                     n_subsamples, random_state=random_state)
 
             selected_variables = Parallel(
                 n_jobs=self.n_jobs, verbose=self.verbose,
