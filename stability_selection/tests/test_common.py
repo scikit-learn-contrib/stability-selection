@@ -52,3 +52,13 @@ def test_automatic_lambda_grid():
     selector = StabilitySelection()
     selector._validate_input()
     assert_array_equal(np.logspace(-5, -2, 25), selector.lambda_grid)
+
+
+@raises(ValueError)
+def test_bootstrap_func():
+    StabilitySelection(bootstrap_func='nonexistent')._validate_input()
+
+
+@raises(ValueError)
+def test_callable_bootstrap_func():
+    StabilitySelection(bootstrap_func=0.5)._validate_input()
