@@ -65,7 +65,7 @@ BOOTSTRAP_FUNC_MAPPING = {
 }
 
 
-def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, threshold=None, random_state=None):
+def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, threshold=None):
     """
     Fits base_estimator on a bootstrap sample of the original data, and returns a mas of the variables that are \
     selected by the fitted model.
@@ -86,6 +86,16 @@ def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, thres
 
     lambda_value : float
         Value of the penalization parameter
+
+    threshold : string, float, optional default None
+        The threshold value to use for feature selection. Features whose
+        importance is greater or equal are kept while the others are
+        discarded. If "median" (resp. "mean"), then the ``threshold`` value is
+        the median (resp. the mean) of the feature importances. A scaling
+        factor (e.g., "1.25*mean") may also be used. If None and if the
+        estimator has a parameter penalty set to l1, either explicitly
+        or implicitly (e.g, Lasso), the threshold used is 1e-5.
+        Otherwise, "mean" is used by default.
 
     Returns
     -------
