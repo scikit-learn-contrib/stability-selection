@@ -248,7 +248,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' %
                              self.n_bootstrap_iterations)
 
-        if not isinstance(self.sample_fraction, float) or not (0.0 < self.threshold <= 1.0):
+        if not isinstance(self.sample_fraction, float) or not (0.0 < self.sample_fraction <= 1.0):
             raise ValueError('sample_fraction should be a float in (0, 1], got %s' % self.threshold)
 
         if not isinstance(self.threshold, float) or not (0.0 < self.threshold <= 1.0):
