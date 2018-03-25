@@ -21,12 +21,19 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.utils import check_X_y, check_array, safe_mask, check_random_state
-from sklearn.utils.random import sample_without_replacement
 from sklearn.utils.validation import check_is_fitted
 from warnings import warn
 
+from .bootstrap import bootstrap_without_replacement, complementary_pairs_bootstrap
+
 
 __all__ = ['StabilitySelection', 'plot_stability_path']
+
+DEFAULT_LAMBDA_GRID = np.logspace(-5, -2, 25)
+BOOTSTRAP_FUNC_MAPPING = {
+    'subsample': bootstrap_without_replacement,
+    'complementary_pairs': complementary_pairs_bootstrap
+}
 
 
 def _return_estimator_from_pipeline(pipeline):
@@ -37,7 +44,17 @@ def _return_estimator_from_pipeline(pipeline):
         return pipeline
 
 
-def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, threshold=None, random_state=None):
+def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, n_samples, n_subsamples, random_state=None):
+    for _ in range(n_bootstrap_iterations):
+        subsample = bootstrap_func(n_samples, n_subsamples, random_state)
+        if isinstance(subsample, tuple):
+            for item in subsample:
+                yield item
+        else:
+            yield subsample
+
+
+def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, threshold=None):
     """
     Fits base_estimator on a bootstrap sample of the original data, and returns a mas of the variables that are \
     selected by the fitted model.
@@ -59,17 +76,24 @@ def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value, thres
     lambda_value : float
         Value of the penalization parameter
 
+    threshold : string, float, optional default None
+        The threshold value to use for feature selection. Features whose
+        importance is greater or equal are kept while the others are
+        discarded. If "median" (resp. "mean"), then the ``threshold`` value is
+        the median (resp. the mean) of the feature importances. A scaling
+        factor (e.g., "1.25*mean") may also be used. If None and if the
+        estimator has a parameter penalty set to l1, either explicitly
+        or implicitly (e.g, Lasso), the threshold used is 1e-5.
+        Otherwise, "mean" is used by default.
+
     Returns
     -------
     selected_variables : array-like, shape = [n_features]
         Boolean mask of selected variables.
     """
-    n_samples = X.shape[0]
-    bootstrap = sample_without_replacement(n_samples, n_samples // 2, random_state=random_state)
-    X_train, y_train = X[safe_mask(X, bootstrap), :], y[bootstrap]
 
     base_estimator.set_params(**{lambda_name: lambda_value})
-    base_estimator.fit(X_train, y_train)
+    base_estimator.fit(X, y)
 
     # TODO: Reconsider if we really want to use SelectFromModel here or not
     selector_model = _return_estimator_from_pipeline(base_estimator)
@@ -116,7 +140,7 @@ def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs)
 
 
 class StabilitySelection(BaseEstimator, TransformerMixin):
-    """Stability selection fits the estimator `base_estimator` on bootstrap samples of the original data set, for
+    """Stability selection [1] fits the estimator `base_estimator` on bootstrap samples of the original data set, for
     different values of the regularization parameter for `base_estimator`. Variables that reliably get selected by the
     model in these bootstrap samples are considered to be stable variables.
 
@@ -126,7 +150,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         The base estimator used for stability selection.
 
     lambda_name : str.
-        The name of the penalizatin parameter for the estimator `base_estimator`.
+        The name of the penalization parameter for the estimator `base_estimator`.
 
     lambda_grid : array-like.
         Grid of values of the penalization parameter to iterate over.
@@ -134,10 +158,23 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     n_bootstrap_iterations : integer.
         Number of bootstrap samples to create.
 
-    threshold: float.
+    sample_fraction : float, optional
+        The fraction of samples to be used in each bootstrap sample.
+        Should be between 0 and 1. If 1, all samples are used.
+
+    threshold : float.
         Threshold defining the minimum cutoff value for the stability scores.
 
-    bootstrap_threshold: string, float, optional default None
+    bootstrap_func : str or callable fun (default=bootstrap_without_replacement)
+        The function used to subsample the data. This parameter can be:
+            - A string, which must be one of
+                - 'subsample': For subsampling without replacement.
+                - 'complementary_pairs': For complementary pairs subsampling [2].
+            - A function that takes n_samples, and a random state
+              as inputs and returns a list of sample indices in the range
+              (0, n_samples-1). By default, indices are uniformly subsampled.
+
+    bootstrap_threshold : string, float, optional default None
         The threshold value to use for feature selection. Features whose
         importance is greater or equal are kept while the others are
         discarded. If "median" (resp. "mean"), then the ``threshold`` value is
@@ -179,15 +216,27 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     ----------
     stability_scores_ : array, shape = [n_features, n_alphas]
         Array of stability scores for each feature for each value of the penalization parameter.
+
+    References
+    ----------
+
+    .. [1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the
+           Royal Statistical Society: Series B (Statistical Methodology), 72(4), pp.417-473.
+    .. [2] Shah, R.D. and Samworth, R.J., 2013. Variable selection with error control:
+           another look at stability selection. Journal of the Royal Statistical Society:
+           Series B (Statistical Methodology), 75(1), pp.55-80.
     """
     def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C', lambda_grid=None,
-                 n_bootstrap_iterations=100, threshold=0.6,
-                 bootstrap_threshold=None, verbose=0, n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
+                 n_bootstrap_iterations=100, sample_fraction=0.5, threshold=0.6,
+                 bootstrap_func=bootstrap_without_replacement, bootstrap_threshold=None, verbose=0,
+                 n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
         self.base_estimator = base_estimator
         self.lambda_name = lambda_name
         self.lambda_grid = lambda_grid
         self.n_bootstrap_iterations = n_bootstrap_iterations
+        self.sample_fraction = sample_fraction
         self.threshold = threshold
+        self.bootstrap_func = bootstrap_func
         self.bootstrap_threshold = bootstrap_threshold
         self.verbose = verbose
         self.n_jobs = n_jobs
@@ -196,7 +245,11 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
     def _validate_input(self):
         if not isinstance(self.n_bootstrap_iterations, int) or self.n_bootstrap_iterations <= 0:
-            raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' % self.n_bootstrap_iterations)
+            raise ValueError('n_bootstrap_iterations should be a positive integer, got %s' %
+                             self.n_bootstrap_iterations)
+
+        if not isinstance(self.sample_fraction, float) or not (0.0 < self.sample_fraction <= 1.0):
+            raise ValueError('sample_fraction should be a float in (0, 1], got %s' % self.threshold)
 
         if not isinstance(self.threshold, float) or not (0.0 < self.threshold <= 1.0):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
@@ -206,7 +259,16 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                              'with that name' % (self.lambda_name, self.base_estimator.__class__.__name__))
 
         if self.lambda_grid is None:
-            self.lambda_grid = np.logspace(-5, -2, 25)
+            self.lambda_grid = DEFAULT_LAMBDA_GRID
+
+        if isinstance(self.bootstrap_func, str):
+            if self.bootstrap_func not in BOOTSTRAP_FUNC_MAPPING.keys():
+                raise ValueError('bootstrap_func is set to %s, but must be one of %s or a callable' %
+                                 (self.bootstrap_func, BOOTSTRAP_FUNC_MAPPING.keys()))
+
+            self.bootstrap_func = BOOTSTRAP_FUNC_MAPPING[self.bootstrap_func]
+        elif not callable(self.bootstrap_func):
+            raise ValueError('bootstrap_func must be one of %s or a callable' % BOOTSTRAP_FUNC_MAPPING.keys())
 
     def fit(self, X, y):
         """Fit the stability selection model on the given data.
@@ -224,6 +286,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         X, y = check_X_y(X, y)
         n_samples, n_variables = X.shape
+        n_subsamples = np.floor(self.sample_fraction * n_samples).astype(int)
         n_lambdas = self.lambda_grid.shape[0]
 
         base_estimator = clone(self.base_estimator)
@@ -235,12 +298,16 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                 print("Fitting estimator for lambda = %.5f (%d / %d) on %d bootstrap samples" %
                       (lambda_value, idx + 1, n_lambdas, self.n_bootstrap_iterations))
 
+            bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, n_samples,
+                                                     n_subsamples, random_state=random_state)
+
             selected_variables = Parallel(
                 n_jobs=self.n_jobs, verbose=self.verbose,
                 pre_dispatch=self.pre_dispatch
-            )(delayed(_fit_bootstrap_sample)(clone(base_estimator), X, y, self.lambda_name, lambda_value,
-                                             threshold=self.bootstrap_threshold, random_state=random_state)
-              for _ in range(self.n_bootstrap_iterations))
+            )(delayed(_fit_bootstrap_sample)(clone(base_estimator), X=X[safe_mask(X, subsample), :],
+                                             y=y[subsample], lambda_name=self.lambda_name, lambda_value=lambda_value,
+                                             threshold=self.bootstrap_threshold)
+              for subsample in bootstrap_samples)
 
             stability_scores[:, idx] = np.vstack(selected_variables).mean(axis=0)
 

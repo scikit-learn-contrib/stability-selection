@@ -69,3 +69,24 @@ def test_stability_selection_regression():
     chosen_betas = selector.get_support(indices=True)
 
     assert_almost_equal(important_betas, chosen_betas)
+
+
+def test_different_bootstrap():
+    n, p, k = 500, 1000, 5
+
+    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+
+    base_estimator = Pipeline([
+        ('scaler', StandardScaler()),
+        ('model', Lasso())
+    ])
+
+    lambdas_grid = np.logspace(-1, 1, num=10)
+
+    selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__alpha', lambda_grid=lambdas_grid,
+                                  bootstrap_func='complementary_pairs')
+    selector.fit(X, y)
+
+    chosen_betas = selector.get_support(indices=True)
+
+    assert_almost_equal(important_betas, chosen_betas)
