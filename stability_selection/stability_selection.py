@@ -141,7 +141,7 @@ def plot_stability_path(stability_selection, threshold_highlight=None, **kwargs)
 
 
 class StabilitySelection(BaseEstimator, TransformerMixin):
-    """Stability selection fits the estimator `base_estimator` on bootstrap samples of the original data set, for
+    """Stability selection [1] fits the estimator `base_estimator` on bootstrap samples of the original data set, for
     different values of the regularization parameter for `base_estimator`. Variables that reliably get selected by the
     model in these bootstrap samples are considered to be stable variables.
 
@@ -162,10 +162,14 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     threshold : float.
         Threshold defining the minimum cutoff value for the stability scores.
 
-    bootstrap_func : callable fun (default=_default_bootstrap)
-        A function that takes n_samples, n_subsamples as inputs and returns
-        a list of sample indices in the range (0, n_samples-1).
-        By default, indices are uniformly subsampled.
+    bootstrap_func : str or callable fun (default=_default_bootstrap)
+        The function used to subsample the data. This parameter can be:
+            - A string, which must be one of
+                - 'subsample': For subsampling without replacement.
+                - 'complementary_pairs': For complementary pairs subsampling [2].
+            - A function that takes n_samples, n_subsamples, and a random state
+              as inputs and returns a list of sample indices in the range
+              (0, n_samples-1). By default, indices are uniformly subsampled.
 
     bootstrap_threshold : string, float, optional default None
         The threshold value to use for feature selection. Features whose
@@ -209,6 +213,15 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     ----------
     stability_scores_ : array, shape = [n_features, n_alphas]
         Array of stability scores for each feature for each value of the penalization parameter.
+
+    References
+    ----------
+
+    .. [1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the
+           Royal Statistical Society: Series B (Statistical Methodology), 72(4), pp.417-473.
+    .. [2] Shah, R.D. and Samworth, R.J., 2013. Variable selection with error control:
+           another look at stability selection. Journal of the Royal Statistical Society:
+           Series B (Statistical Methodology), 75(1), pp.55-80.
     """
     def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C', lambda_grid=None,
                  n_bootstrap_iterations=100, threshold=0.6, bootstrap_func=_default_bootstrap,
