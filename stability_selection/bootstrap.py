@@ -11,6 +11,9 @@ import numpy as np
 from sklearn.utils.random import sample_without_replacement
 
 
+__all__ = ['bootstrap_without_replacement', 'complementary_pairs_bootstrap']
+
+
 def bootstrap_without_replacement(n_samples, n_subsamples, random_state=None):
     """
     Bootstrap without replacement. It is a wrapper around
