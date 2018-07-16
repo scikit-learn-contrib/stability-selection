@@ -14,15 +14,15 @@ from sklearn.utils.random import sample_without_replacement
 __all__ = ['bootstrap_without_replacement', 'complementary_pairs_bootstrap']
 
 
-def bootstrap_without_replacement(n_samples, n_subsamples, random_state=None):
+def bootstrap_without_replacement(y, n_subsamples, random_state=None):
     """
-    Bootstrap without replacement. It is a wrapper around
+    Bootstrap without replacement, irrespective of label. It is a wrapper around
     sklearn.utils.random.sample_without_replacement.
 
     Parameters
     ----------
-    n_samples : int
-        Number of total samples
+    y : array of size [n_subsamples,]
+        True labels
     n_subsamples : int
         Number of subsamples in the bootstrap sample
     random_state : int, RandomState instance or None, optional, default=None
@@ -39,19 +39,20 @@ def bootstrap_without_replacement(n_samples, n_subsamples, random_state=None):
             The sampled subsets of integer. The subset of selected integer might
             not be randomized, see the method argument.
     """
+    n_samples = y.shape[0]
     return sample_without_replacement(n_samples, n_subsamples, random_state=random_state)
 
 
-def complementary_pairs_bootstrap(n_samples, n_subsamples, random_state=None):
+def complementary_pairs_bootstrap(y, n_subsamples, random_state=None):
     """
     Complementary pairs bootstrap. Two subsamples A and B are generated, such
     that |A| = n_subsamples, the union of A and B equals {0, ..., n_samples - 1},
-    and the intersection of A and B is the empty set.
+    and the intersection of A and B is the empty set. Samples irrespective of label.
 
     Parameters
     ----------
-    n_samples : int
-        Number of total samples
+    y : array of size [n_subsamples,]
+        True labels
     n_subsamples : int
         Number of subsamples in the bootstrap sample
     random_state : int, RandomState instance or None, optional, default=None
@@ -70,7 +71,8 @@ def complementary_pairs_bootstrap(n_samples, n_subsamples, random_state=None):
     B : array of size [n_samples - n_subsamples,]
             The complement of A.
     """
-    subsample = bootstrap_without_replacement(n_samples, n_subsamples, random_state)
+    n_samples = y.shape[0]
+    subsample = bootstrap_without_replacement(y, n_subsamples, random_state)
     complementary_subsample = np.setdiff1d(np.arange(n_samples), subsample)
 
     return subsample, complementary_subsample

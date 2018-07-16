@@ -44,9 +44,9 @@ def _return_estimator_from_pipeline(pipeline):
         return pipeline
 
 
-def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, n_samples, n_subsamples, random_state=None):
+def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, y, n_subsamples, random_state=None):
     for _ in range(n_bootstrap_iterations):
-        subsample = bootstrap_func(n_samples, n_subsamples, random_state)
+        subsample = bootstrap_func(y, n_subsamples, random_state)
         if isinstance(subsample, tuple):
             for item in subsample:
                 yield item
@@ -170,9 +170,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             - A string, which must be one of
                 - 'subsample': For subsampling without replacement.
                 - 'complementary_pairs': For complementary pairs subsampling [2].
-            - A function that takes n_samples, and a random state
+            - A function that takes y, and a random state
               as inputs and returns a list of sample indices in the range
-              (0, n_samples-1). By default, indices are uniformly subsampled.
+              (0, len(y)-1). By default, indices are uniformly subsampled.
 
     bootstrap_threshold : string, float, optional default None
         The threshold value to use for feature selection. Features whose
@@ -298,7 +298,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                 print("Fitting estimator for lambda = %.5f (%d / %d) on %d bootstrap samples" %
                       (lambda_value, idx + 1, n_lambdas, self.n_bootstrap_iterations))
 
-            bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, n_samples,
+            bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, y,
                                                      n_subsamples, random_state=random_state)
 
             selected_variables = Parallel(
