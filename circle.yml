@@ -13,6 +13,9 @@ machine:
     # The email is to be used for commits in the Github Page
     EMAIL: "thomas_huijskens@hotmail.com"
 
+  python:
+    version: 3.5.0
+
 dependencies:
 
   # Various dependencies
