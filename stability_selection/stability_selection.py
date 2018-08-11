@@ -22,6 +22,7 @@ from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.utils import check_array, check_random_state, check_X_y, safe_mask
+from sklearn.utils.multiclass import type_of_target
 from sklearn.utils.validation import check_is_fitted
 
 from .bootstrap import (bootstrap_without_replacement,
@@ -46,12 +47,26 @@ def _return_estimator_from_pipeline(pipeline):
 
 
 def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, y, n_subsamples, random_state=None):
+    target_type = type_of_target(y)
+    classification_target_types = ('binary')  # TODO: extend to multiclass
+
     for _ in range(n_bootstrap_iterations):
         subsample = bootstrap_func(y, n_subsamples, random_state)
+
         if isinstance(subsample, tuple):
             for item in subsample:
+                if target_type in classification_target_types:
+                    class_counts = np.bincount(y[item])
+                    if not np.any(class_counts):
+                        raise ValueError('Subsample does not contain samples from both classes')
+
                 yield item
         else:
+            if target_type in classification_target_types:
+                class_counts = np.bincount(y[subsample])
+                if not np.any(class_counts):
+                    raise ValueError('Subsample does not contain samples from both classes')
+
             yield subsample
 
 
