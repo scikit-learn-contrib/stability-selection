@@ -71,7 +71,7 @@ def test_stability_selection_regression():
     assert_almost_equal(important_betas, chosen_betas)
 
 
-def test_different_bootstrap():
+def test_with_complementary_pairs_bootstrap():
     n, p, k = 500, 1000, 5
 
     X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
@@ -89,4 +89,15 @@ def test_different_bootstrap():
 
     chosen_betas = selector.get_support(indices=True)
 
+    assert_almost_equal(important_betas, chosen_betas)
+
+
+def test_with_stratified_bootstrap():
+    n, p, k = 1000, 1000, 5
+
+    X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
+    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25), verbose=1, bootstrap_func='stratified')
+    selector.fit(X, y)
+
+    chosen_betas = selector.get_support(indices=True)
     assert_almost_equal(important_betas, chosen_betas)

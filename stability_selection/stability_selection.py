@@ -12,27 +12,28 @@ References
 
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
+from warnings import warn
 
+import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin, clone
 from sklearn.externals.joblib import Parallel, delayed
 from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
-from sklearn.utils import check_X_y, check_array, safe_mask, check_random_state
+from sklearn.utils import check_array, check_random_state, check_X_y, safe_mask
 from sklearn.utils.validation import check_is_fitted
-from warnings import warn
 
-from .bootstrap import bootstrap_without_replacement, complementary_pairs_bootstrap
-
+from .bootstrap import (bootstrap_without_replacement,
+                        complementary_pairs_bootstrap, stratified_bootstrap)
 
 __all__ = ['StabilitySelection', 'plot_stability_path']
 
 DEFAULT_LAMBDA_GRID = np.logspace(-5, -2, 25)
 BOOTSTRAP_FUNC_MAPPING = {
     'subsample': bootstrap_without_replacement,
-    'complementary_pairs': complementary_pairs_bootstrap
+    'complementary_pairs': complementary_pairs_bootstrap,
+    'stratified': stratified_bootstrap
 }
 
 
@@ -44,9 +45,9 @@ def _return_estimator_from_pipeline(pipeline):
         return pipeline
 
 
-def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, n_samples, n_subsamples, random_state=None):
+def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, y, n_subsamples, random_state=None):
     for _ in range(n_bootstrap_iterations):
-        subsample = bootstrap_func(n_samples, n_subsamples, random_state)
+        subsample = bootstrap_func(y, n_subsamples, random_state)
         if isinstance(subsample, tuple):
             for item in subsample:
                 yield item
@@ -170,9 +171,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             - A string, which must be one of
                 - 'subsample': For subsampling without replacement.
                 - 'complementary_pairs': For complementary pairs subsampling [2].
-            - A function that takes n_samples, and a random state
+            - A function that takes y, and a random state
               as inputs and returns a list of sample indices in the range
-              (0, n_samples-1). By default, indices are uniformly subsampled.
+              (0, len(y)-1). By default, indices are uniformly subsampled.
 
     bootstrap_threshold : string, float, optional default None
         The threshold value to use for feature selection. Features whose
@@ -298,7 +299,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                 print("Fitting estimator for lambda = %.5f (%d / %d) on %d bootstrap samples" %
                       (lambda_value, idx + 1, n_lambdas, self.n_bootstrap_iterations))
 
-            bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, n_samples,
+            bootstrap_samples = _bootstrap_generator(self.n_bootstrap_iterations, self.bootstrap_func, y,
                                                      n_subsamples, random_state=random_state)
 
             selected_variables = Parallel(
