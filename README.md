@@ -54,7 +54,7 @@ base_estimator = Pipeline([
     ('model', LogisticRegression(penalty='l1'))
 ])
 selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',
-                              lambda_grid=np.logspace(-5, -1, 50))
+                              lambda_grid=np.logspace(-5, -1, 50)).fit(X, y)
 
 print(selector.get_support(indices=True))
 ```
