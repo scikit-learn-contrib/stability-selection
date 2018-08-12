@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to stability-selection’s documentation! &mdash; stability-selection 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="api.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> stability-selection
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">stability-selection</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to stability-selection’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-stability-selection-s-documentation">
+<h1>Welcome to stability-selection’s documentation!<a class="headerlink" href="#welcome-to-stability-selection-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This project contains an implementation of the stability selection algorithm.</p>
+<p>Stability selection is a technique that aims to enhance and improve existing feature
+selection algorithms. For a generic feature selection algorithm, we have a tuning
+parameter <span class="math">\lambda \in \Lambda</span> that controls the amount of regularisation. Examples
+of such algorithms are:</p>
+<ol class="arabic simple">
+<li><span class="math">\ell_1</span>-penalized regression (penalization parameter <span class="math">\lambda</span>).</li>
+<li>Orthogonal matching pursuit (number of steps in forward selection).</li>
+<li>Boosting (<span class="math">\ell_1</span> penalty)</li>
+</ol>
+<p>These structure learning algorithms have in common is a parameter <span class="math">\lambda \in \Lambda</span>
+that controls the amount of regularisation. For every value of <span class="math">\lambda</span>, we obtain a structure
+estimate <span class="math">S^\lambda = \{1, \ldots, p\}</span>, which indicates which variables to select. We are
+interested to determine whether there exists a <span class="math">\lambda</span> such that <span class="math">S^\lambda</span> is identical to
+<span class="math">S</span> with high probability, and how to achieve the right amount of regularisation.</p>
+<p>Sability selection works as follows:</p>
+<ol class="arabic">
+<li><p class="first">Define a candidate set of regularization parameters <span class="math">\Lambda</span> and a subsample number <span class="math">N</span>.</p>
+</li>
+<li><p class="first">For each value <span class="math">\lambda \in \Lambda</span> do:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p class="first">For each <span class="math">i</span> in <span class="math">\{1, \ldots, N\}</span>, do:</p>
+<blockquote>
+<div><ol class="lowerroman simple">
+<li>Generate a bootstrap sample of the original data <span class="math">X^{n \times p}</span> of size <span class="math">\frac{n}{2}</span>.</li>
+<li>Run the selection algorithm (LASSO) on the bootstrap sample with regularization parameter <span class="math">\lambda</span>.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Given the selection sets from each subsample, calculate the empirical selection probability for each model component:</p>
+<p><span class="math">\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}.</span></p>
+</li>
+<li><p class="first">The selection probability for component <span class="math">k</span> is its probability of being selected by the algorithm.</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Given the selection probabilities for each component and for each value of <span class="math">\lambda</span>, construct the
+stable set according to the following definition:</p>
+<p><span class="math">\hat{S}^{\text{stable}} = \{k : \max_{\lambda \in \Lambda} \hat{\Pi}_k^\lambda \geq \pi_\text{thr}\}.</span></p>
+<p>where <span class="math">\pi_\text{thr}</span> is a predefined threshold.</p>
+</li>
+</ol>
+<p>This algorithm identifies a set of “stable” variables that are selected with high probability.</p>
+<blockquote>
+<div><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a><ul>
+</ul>
+</li>
+</ul>
+</div>
+</div></blockquote>
+<p>See the <a class="reference external" href="https://github.com/thuijskens/stability-selection/blob/master/README.md">README</a>
+for more information.</p>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Thomas Huijskens.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

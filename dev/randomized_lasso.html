@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Randomized LASSO &mdash; stability-selection 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> stability-selection
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stability-selection</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Randomized LASSO</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/randomized_lasso.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="randomized-lasso">
+<h1>Randomized LASSO<a class="headerlink" href="#randomized-lasso" title="Permalink to this headline">¶</a></h1>
+<p>The documentation of the randomized_lasso module.</p>
+<span class="target" id="module-stability_selection.randomized_lasso"></span><p>This module contains implementations of randomized logistic regression and randomized LASSO regression [1].</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the Royal Statistical Society:</dt>
+<dd>Series B (Statistical Methodology), 72(4), pp.417-473.</dd>
+</dl>
+<dl class="class">
+<dt id="stability_selection.randomized_lasso.RandomizedLogisticRegression">
+<em class="property">class </em><code class="descclassname">stability_selection.randomized_lasso.</code><code class="descname">RandomizedLogisticRegression</code><span class="sig-paren">(</span><em>weakness=0.5</em>, <em>tol=0.0001</em>, <em>C=1.0</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>class_weight=None</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>verbose=0</em>, <em>warm_start=False</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/randomized_lasso.html#RandomizedLogisticRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.randomized_lasso.RandomizedLogisticRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomized version of scikit-learns LogisticRegression class.</p>
+<p>Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute
+value of the coefficients with a penalty term proportional to <cite>C</cite>, but the randomized
+LASSO changes the penalty to a randomly chosen value in the range <cite>[C, C/weakness]</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>weakness</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Weakness value for randomized LASSO. Must be in (0, 1].</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.linear_model.LogisticRegression</span></code></dt>
+<dd>learns logistic regression models using the same algorithm.</dd>
+</dl>
+</div>
+<dl class="method">
+<dt id="stability_selection.randomized_lasso.RandomizedLogisticRegression.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em>, <em>sample_weight=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/randomized_lasso.html#RandomizedLogisticRegression.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.randomized_lasso.RandomizedLogisticRegression.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model according to the given training data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{array-like, sparse matrix}, shape = [n_samples, n_features]</span></dt>
+<dd><p class="first last">The training input samples.</p>
+</dd>
+<dt><strong>y</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape = [n_samples]</span></dt>
+<dd><p class="first last">The target values.</p>
+</dd>
+<dt><strong>sample_weight</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape (n_samples,) optional</span></dt>
+<dd><p class="first last">Array of weights that are assigned to individual samples.
+If not provided, then each sample is given unit weight.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stability_selection.randomized_lasso.RandomizedLasso">
+<em class="property">class </em><code class="descclassname">stability_selection.randomized_lasso.</code><code class="descname">RandomizedLasso</code><span class="sig-paren">(</span><em>weakness=0.5</em>, <em>alpha=1.0</em>, <em>fit_intercept=True</em>, <em>normalize=False</em>, <em>precompute=False</em>, <em>copy_X=True</em>, <em>max_iter=1000</em>, <em>tol=0.0001</em>, <em>warm_start=False</em>, <em>positive=False</em>, <em>random_state=None</em>, <em>selection='cyclic'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/randomized_lasso.html#RandomizedLasso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.randomized_lasso.RandomizedLasso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomized version of scikit-learns Lasso class.</p>
+<p>Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute
+value of the coefficients with a penalty term proportional to <cite>alpha</cite>, but the randomized
+LASSO changes the penalty to a randomly chosen value in the range <cite>[alpha, alpha/weakness]</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>weakness</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Weakness value for randomized LASSO. Must be in (0, 1].</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.linear_model.LogisticRegression</span></code></dt>
+<dd>learns logistic regression models using the same algorithm.</dd>
+</dl>
+</div>
+<dl class="method">
+<dt id="stability_selection.randomized_lasso.RandomizedLasso.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/randomized_lasso.html#RandomizedLasso.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.randomized_lasso.RandomizedLasso.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model according to the given training data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{array-like, sparse matrix}, shape = [n_samples, n_features]</span></dt>
+<dd><p class="first last">The training input samples.</p>
+</dd>
+<dt><strong>y</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like, shape = [n_samples]</span></dt>
+<dd><p class="first last">The target values.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Thomas Huijskens.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
