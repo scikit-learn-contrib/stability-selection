@@ -81,12 +81,7 @@ class RandomizedLogisticRegression(LogisticRegression):
         if not isinstance(self.weakness, float) or not (0.0 < self.weakness <= 1.0):
             raise ValueError('weakness should be a float in (0, 1], got %s' % self.weakness)
 
-        if self.solver in ['newton-cg']:
-            _dtype = [np.float64, np.float32]
-        else:
-            _dtype = np.float64
-
-        X, y = check_X_y(X, y, accept_sparse='csr', dtype=_dtype,
+        X, y = check_X_y(X, y, accept_sparse='csr', dtype=[np.float64, np.float32],
                          order="C")
 
         n_features = X.shape[1]

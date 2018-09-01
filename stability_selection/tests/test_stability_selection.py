@@ -2,6 +2,7 @@ import warnings
 
 import numpy as np
 from numpy.testing import assert_almost_equal
+from nose.tools import raises
 
 from sklearn.linear_model import Lasso
 from sklearn.preprocessing import StandardScaler
@@ -112,6 +113,7 @@ def test_with_stratified_bootstrap():
     assert_almost_equal(important_betas, chosen_betas)
 
 
+@raises(ValueError)
 def test_different_shape():
     n, p, k = 100, 200, 5
 
@@ -128,7 +130,7 @@ def test_different_shape():
                                   lambda_name='model__alpha',
                                   lambda_grid=lambdas_grid)
     selector.fit(X, y)
-    selector.transform(X[:-2])
+    selector.transform(X[:, :-2])
 
 
 def test_no_features():

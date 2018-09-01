@@ -35,12 +35,20 @@ def test_estimator():
 
 
 @raises(ValueError)
-def test_weakness():
+def test_logistic_weakness():
     n, p = 200, 200
     rho = 0.6
 
     X, y = generate_experiment_data(n, p, rho)
     RandomizedLogisticRegression(weakness=0.0).fit(X, y)
+
+
+@raises(ValueError)
+def test_logistic_weakness():
+    n, p = 200, 200
+    rho = 0.6
+
+    X, y = generate_experiment_data(n, p, rho)
     RandomizedLasso(weakness=0.0).fit(X, y)
 
 
