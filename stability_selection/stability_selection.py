@@ -285,7 +285,8 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         self._validate_input()
 
-        X, y = check_X_y(X, y)
+        X, y = check_X_y(X, y, accept_sparse=True)
+
         n_samples, n_variables = X.shape
         n_subsamples = np.floor(self.sample_fraction * n_samples).astype(int)
         n_lambdas = self.lambda_grid.shape[0]

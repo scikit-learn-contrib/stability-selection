@@ -62,3 +62,13 @@ def test_bootstrap_func():
 @raises(ValueError)
 def test_callable_bootstrap_func():
     StabilitySelection(bootstrap_func=0.5)._validate_input()
+
+
+@raises(ValueError)
+def test_sample_fraction():
+    StabilitySelection(sample_fraction=0.0)._validate_input()
+
+
+@raises(ValueError)
+def test_lambda_name():
+    StabilitySelection(lambda_name='n_estimators')._validate_input()
