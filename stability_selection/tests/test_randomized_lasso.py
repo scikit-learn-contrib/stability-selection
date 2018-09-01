@@ -1,8 +1,13 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
+from nose.tools import raises
+from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils import check_random_state
-from stability_selection import StabilitySelection, RandomizedLasso
+from scipy.sparse import csr_matrix
+
+from stability_selection import StabilitySelection, RandomizedLasso, \
+    RandomizedLogisticRegression
 
 
 def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
@@ -24,6 +29,21 @@ def generate_experiment_data(n=200, p=200, rho=0.6, random_state=3245):
     return X, y
 
 
+def test_estimator():
+    check_estimator(RandomizedLasso)
+    check_estimator(RandomizedLogisticRegression)
+
+
+@raises(ValueError)
+def test_weakness():
+    n, p = 200, 200
+    rho = 0.6
+
+    X, y = generate_experiment_data(n, p, rho)
+    RandomizedLogisticRegression(weakness=0.0).fit(X, y)
+    RandomizedLasso(weakness=0.0).fit(X, y)
+
+
 def test_randomized_lasso():
     n, p = 200, 200
     rho = 0.6
@@ -40,3 +60,17 @@ def test_randomized_lasso():
     chosen_betas = selector.get_support(indices=True)
 
     assert_almost_equal(np.array([0, 1]), chosen_betas)
+
+
+def test_issparse():
+    n, p = 200, 200
+    rho = 0.6
+    weakness = 0.2
+
+    X, y = generate_experiment_data(n, p, rho)
+    lambda_grid = np.linspace(0.01, 0.5, num=100)
+
+    estimator = RandomizedLasso(weakness=weakness)
+    selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',
+                                  lambda_grid=lambda_grid, threshold=0.9, verbose=1)
+    selector.fit(csr_matrix(X), y)
