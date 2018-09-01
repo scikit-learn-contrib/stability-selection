@@ -27,11 +27,11 @@ An example plot of the stability scores for each variable after fitting :class:`
 
     Selected variables are:
     -----------------------
-    Variable 1: [180], score 0.890
+    Variable 1: [180], score 0.870
     Variable 2: [495], score 1.000
     Variable 3: [523], score 1.000
     Variable 4: [524], score 1.000
-    Variable 5: [647], score 1.000
+    Variable 5: [647], score 0.990
 
 
 
@@ -90,7 +90,7 @@ An example plot of the stability scores for each variable after fitting :class:`
         for idx, (variable, score) in enumerate(zip(selected_variables, selected_scores[selected_variables])):
             print('Variable %d: [%d], score %.3f' % (idx + 1, variable, score))
 
-**Total running time of the script:** ( 1 minutes  36.976 seconds)
+**Total running time of the script:** ( 1 minutes  36.407 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_stability_scores.py:
