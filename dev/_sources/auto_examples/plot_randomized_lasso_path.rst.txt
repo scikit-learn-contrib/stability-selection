@@ -398,7 +398,7 @@ with :class:`stability_selection.RandomizedLasso`
 
 
 
-**Total running time of the script:** ( 0 minutes  53.941 seconds)
+**Total running time of the script:** ( 0 minutes  55.351 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_randomized_lasso_path.py:

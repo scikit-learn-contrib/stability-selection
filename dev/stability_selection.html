@@ -151,19 +151,23 @@
   <div class="section" id="stability-selection">
 <h1>Stability selection<a class="headerlink" href="#stability-selection" title="Permalink to this headline">¶</a></h1>
 <p>The documentation of the stability_selection module.</p>
-<span class="target" id="module-stability_selection.stability_selection"></span><p>This module contains a scikit-learn compatible implementation of stability selection[1].</p>
+<span class="target" id="module-stability_selection.stability_selection"></span><p>This module contains a scikit-learn compatible implementation of
+stability selection[1].</p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
-<dt>[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the Royal Statistical Society:</dt>
-<dd>Series B (Statistical Methodology), 72(4), pp.417-473.</dd>
+<dt>[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.</dt>
+<dd>Journal of the Royal Statistical Society: Series B
+(Statistical Methodology), 72(4), pp.417-473.</dd>
 </dl>
 <dl class="class">
 <dt id="stability_selection.stability_selection.StabilitySelection">
-<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False)</em>, <em>lambda_name='C'</em>, <em>lambda_grid=None</em>, <em>n_bootstrap_iterations=100</em>, <em>sample_fraction=0.5</em>, <em>threshold=0.6</em>, <em>bootstrap_func=&lt;function bootstrap_without_replacement&gt;</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stability selection [1] fits the estimator <cite>base_estimator</cite> on bootstrap samples of the original data set, for
-different values of the regularization parameter for <cite>base_estimator</cite>. Variables that reliably get selected by the
-model in these bootstrap samples are considered to be stable variables.</p>
+<em class="property">class </em><code class="descclassname">stability_selection.stability_selection.</code><code class="descname">StabilitySelection</code><span class="sig-paren">(</span><em>base_estimator=LogisticRegression(C=1.0</em>, <em>class_weight=None</em>, <em>dual=False</em>, <em>fit_intercept=True</em>, <em>intercept_scaling=1</em>, <em>max_iter=100</em>, <em>multi_class='ovr'</em>, <em>n_jobs=1</em>, <em>penalty='l1'</em>, <em>random_state=None</em>, <em>solver='liblinear'</em>, <em>tol=0.0001</em>, <em>verbose=0</em>, <em>warm_start=False)</em>, <em>lambda_name='C'</em>, <em>lambda_grid=array([1.00000000e-05</em>, <em>1.33352143e-05</em>, <em>1.77827941e-05</em>, <em>2.37137371e-05</em>, <em>3.16227766e-05</em>, <em>4.21696503e-05</em>, <em>5.62341325e-05</em>, <em>7.49894209e-05</em>, <em>1.00000000e-04</em>, <em>1.33352143e-04</em>, <em>1.77827941e-04</em>, <em>2.37137371e-04</em>, <em>3.16227766e-04</em>, <em>4.21696503e-04</em>, <em>5.62341325e-04</em>, <em>7.49894209e-04</em>, <em>1.00000000e-03</em>, <em>1.33352143e-03</em>, <em>1.77827941e-03</em>, <em>2.37137371e-03</em>, <em>3.16227766e-03</em>, <em>4.21696503e-03</em>, <em>5.62341325e-03</em>, <em>7.49894209e-03</em>, <em>1.00000000e-02])</em>, <em>n_bootstrap_iterations=100</em>, <em>sample_fraction=0.5</em>, <em>threshold=0.6</em>, <em>bootstrap_func=&lt;function bootstrap_without_replacement&gt;</em>, <em>bootstrap_threshold=None</em>, <em>verbose=0</em>, <em>n_jobs=1</em>, <em>pre_dispatch='2*n_jobs'</em>, <em>random_state=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/stability_selection/stability_selection.html#StabilitySelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#stability_selection.stability_selection.StabilitySelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stability selection [1] fits the estimator <cite>base_estimator</cite> on
+bootstrap samples of the original data set, for different values of
+the regularization parameter for <cite>base_estimator</cite>. Variables that
+reliably get selected by the model in these bootstrap samples are
+considered to be stable variables.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -173,7 +177,8 @@ model in these bootstrap samples are considered to be stable variables.</p>
 <dd><p class="first last">The base estimator used for stability selection.</p>
 </dd>
 <dt><strong>lambda_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str.</span></dt>
-<dd><p class="first last">The name of the penalization parameter for the estimator <cite>base_estimator</cite>.</p>
+<dd><p class="first last">The name of the penalization parameter for the estimator
+<cite>base_estimator</cite>.</p>
 </dd>
 <dt><strong>lambda_grid</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array-like.</span></dt>
 <dd><p class="first last">Grid of values of the penalization parameter to iterate over.</p>
@@ -259,16 +264,20 @@ by <cite>np.random</cite>.</p>
 <table class="docutils citation" frame="void" id="r82f9ff7e83a2-1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the
-Royal Statistical Society: Series B (Statistical Methodology), 72(4), pp.417-473.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
+Journal of the Royal Statistical Society: Series B
+(Statistical Methodology), 72(4), pp.417-473.</td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="r82f9ff7e83a2-2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Shah, R.D. and Samworth, R.J., 2013. Variable selection with error control:
-another look at stability selection. Journal of the Royal Statistical Society:
-Series B (Statistical Methodology), 75(1), pp.55-80.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><p class="first">Shah, R.D. and Samworth, R.J., 2013. Variable selection with
+error control: another look at stability selection. Journal
+of the Royal Statistical Society: Series B (Statistical Methodology),</p>
+<blockquote class="last">
+<div>75(1), pp.55-80.</div></blockquote>
+</td></tr>
 </tbody>
 </table>
 <table class="docutils field-list" frame="void" rules="none">
@@ -277,7 +286,8 @@ Series B (Statistical Methodology), 75(1), pp.55-80.</td></tr>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>stability_scores_</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array, shape = [n_features, n_alphas]</span></dt>
-<dd><p class="first last">Array of stability scores for each feature for each value of the penalization parameter.</p>
+<dd><p class="first last">Array of stability scores for each feature for each value of the
+penalization parameter.</p>
 </dd>
 </dl>
 </td>
@@ -316,11 +326,12 @@ Series B (Statistical Methodology), 75(1), pp.55-80.</td></tr>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>indices</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (default False)</span></dt>
-<dd><p class="first last">If True, the return value will be an array of integers, rather
-than a boolean mask.</p>
+<dd><p class="first last">If True, the return value will be an array of integers,
+rather than a boolean mask.</p>
 </dd>
 <dt><strong>threshold: float.</strong></dt>
-<dd><p class="first last">Threshold defining the minimum cutoff value for the stability scores.</p>
+<dd><p class="first last">Threshold defining the minimum cutoff value for the
+stability scores.</p>
 </dd>
 </dl>
 </td>
@@ -354,7 +365,8 @@ values are indices into the input feature vector.</p>
 <dd><p class="first last">The input samples.</p>
 </dd>
 <dt><strong>threshold: float.</strong></dt>
-<dd><p class="first last">Threshold defining the minimum cutoff value for the stability scores.</p>
+<dd><p class="first last">Threshold defining the minimum cutoff value for the
+stability scores.</p>
 </dd>
 </dl>
 </td>
@@ -385,7 +397,8 @@ values are indices into the input feature vector.</p>
 <dd><p class="first last">Fitted instance of StabilitySelection.</p>
 </dd>
 <dt><strong>threshold_highlight</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Threshold defining the cutoff for the stability scores for the variables that need to be highlighted.</p>
+<dd><p class="first last">Threshold defining the cutoff for the stability scores for the
+variables that need to be highlighted.</p>
 </dd>
 <dt><strong>kwargs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
 <dd><p class="first last">Arguments passed to matplotlib plot function.</p>

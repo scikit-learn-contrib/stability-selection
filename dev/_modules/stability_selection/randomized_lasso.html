@@ -152,13 +152,14 @@
 <span class="sd">Randomized LASSO estimators</span>
 <span class="sd">===========================</span>
 
-<span class="sd">This module contains implementations of randomized logistic regression and randomized LASSO regression [1].</span>
+<span class="sd">This module contains implementations of randomized logistic regression</span>
+<span class="sd">and randomized LASSO regression [1].</span>
 
 <span class="sd">References</span>
 <span class="sd">----------</span>
-<span class="sd">[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the Royal Statistical Society:</span>
-<span class="sd">    Series B (Statistical Methodology), 72(4), pp.417-473.</span>
-
+<span class="sd">[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.</span>
+<span class="sd">    Journal of the Royal Statistical Society: Series B</span>
+<span class="sd">    (Statistical Methodology), 72(4), pp.417-473.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -187,9 +188,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomized version of scikit-learns LogisticRegression class.</span>
 
-<span class="sd">    Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute</span>
-<span class="sd">    value of the coefficients with a penalty term proportional to `C`, but the randomized</span>
-<span class="sd">    LASSO changes the penalty to a randomly chosen value in the range `[C, C/weakness]`.</span>
+<span class="sd">    Randomized LASSO is a generalization of the LASSO. The LASSO</span>
+<span class="sd">    penalises the absolute value of the coefficients with a penalty</span>
+<span class="sd">    term proportional to `C`, but the randomized LASSO changes the</span>
+<span class="sd">    penalty to a randomly chosen value in the range `[C, C/weakness]`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -198,7 +200,8 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    sklearn.linear_model.LogisticRegression : learns logistic regression models using the same algorithm.</span>
+<span class="sd">    sklearn.linear_model.LogisticRegression : learns logistic regression</span>
+<span class="sd">    models using the same algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weakness</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                  <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">intercept_scaling</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -207,10 +210,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">weakness</span> <span class="o">=</span> <span class="n">weakness</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RandomizedLogisticRegression</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="n">fit_intercept</span><span class="p">,</span>
-            <span class="n">intercept_scaling</span><span class="o">=</span><span class="n">intercept_scaling</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">multi_class</span><span class="o">=</span><span class="n">multi_class</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-            <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span>
-        <span class="p">)</span>
+            <span class="n">intercept_scaling</span><span class="o">=</span><span class="n">intercept_scaling</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+            <span class="n">multi_class</span><span class="o">=</span><span class="n">multi_class</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">warm_start</span><span class="o">=</span><span class="n">warm_start</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RandomizedLogisticRegression.fit"><a class="viewcode-back" href="../../randomized_lasso.html#stability_selection.randomized_lasso.RandomizedLogisticRegression.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fit the model according to the given training data.</span>
@@ -246,9 +249,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomized version of scikit-learns Lasso class.</span>
 
-<span class="sd">    Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute</span>
-<span class="sd">    value of the coefficients with a penalty term proportional to `alpha`, but the randomized</span>
-<span class="sd">    LASSO changes the penalty to a randomly chosen value in the range `[alpha, alpha/weakness]`.</span>
+<span class="sd">    Randomized LASSO is a generalization of the LASSO. The LASSO penalises</span>
+<span class="sd">    the absolute value of the coefficients with a penalty term proportional</span>
+<span class="sd">    to `alpha`, but the randomized LASSO changes the penalty to a randomly</span>
+<span class="sd">    chosen value in the range `[alpha, alpha/weakness]`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -257,7 +261,8 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    sklearn.linear_model.LogisticRegression : learns logistic regression models using the same algorithm.</span>
+<span class="sd">    sklearn.linear_model.LogisticRegression : learns logistic regression models</span>
+<span class="sd">    using the same algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weakness</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">precompute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
