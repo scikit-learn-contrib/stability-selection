@@ -3,13 +3,14 @@
 Randomized LASSO estimators
 ===========================
 
-This module contains implementations of randomized logistic regression and randomized LASSO regression [1].
+This module contains implementations of randomized logistic regression
+and randomized LASSO regression [1].
 
 References
 ----------
-[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection. Journal of the Royal Statistical Society:
-    Series B (Statistical Methodology), 72(4), pp.417-473.
-
+[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
+    Journal of the Royal Statistical Society: Series B
+    (Statistical Methodology), 72(4), pp.417-473.
 """
 import numpy as np
 
@@ -38,9 +39,10 @@ class RandomizedLogisticRegression(LogisticRegression):
     """
     Randomized version of scikit-learns LogisticRegression class.
 
-    Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute
-    value of the coefficients with a penalty term proportional to `C`, but the randomized
-    LASSO changes the penalty to a randomly chosen value in the range `[C, C/weakness]`.
+    Randomized LASSO is a generalization of the LASSO. The LASSO
+    penalises the absolute value of the coefficients with a penalty
+    term proportional to `C`, but the randomized LASSO changes the
+    penalty to a randomly chosen value in the range `[C, C/weakness]`.
 
     Parameters
     ----------
@@ -49,7 +51,8 @@ class RandomizedLogisticRegression(LogisticRegression):
 
     See also
     --------
-    sklearn.linear_model.LogisticRegression : learns logistic regression models using the same algorithm.
+    sklearn.linear_model.LogisticRegression : learns logistic regression
+    models using the same algorithm.
     """
     def __init__(self, weakness=0.5, tol=1e-4, C=1.0,
                  fit_intercept=True, intercept_scaling=1, class_weight=None,
@@ -58,10 +61,10 @@ class RandomizedLogisticRegression(LogisticRegression):
         self.weakness = weakness
         super(RandomizedLogisticRegression, self).__init__(
             penalty='l1', dual=False, tol=tol, C=C, fit_intercept=fit_intercept,
-            intercept_scaling=intercept_scaling, class_weight=class_weight, random_state=random_state,
-            solver=solver, max_iter=max_iter, multi_class=multi_class, verbose=verbose,
-            warm_start=warm_start, n_jobs=n_jobs
-        )
+            intercept_scaling=intercept_scaling, class_weight=class_weight,
+            random_state=random_state, solver=solver, max_iter=max_iter,
+            multi_class=multi_class, verbose=verbose, warm_start=warm_start,
+            n_jobs=n_jobs)
 
     def fit(self, X, y, sample_weight=None):
         """Fit the model according to the given training data.
@@ -97,9 +100,10 @@ class RandomizedLasso(Lasso):
     """
     Randomized version of scikit-learns Lasso class.
 
-    Randomized LASSO is a generalization of the LASSO. The LASSO penalises the absolute
-    value of the coefficients with a penalty term proportional to `alpha`, but the randomized
-    LASSO changes the penalty to a randomly chosen value in the range `[alpha, alpha/weakness]`.
+    Randomized LASSO is a generalization of the LASSO. The LASSO penalises
+    the absolute value of the coefficients with a penalty term proportional
+    to `alpha`, but the randomized LASSO changes the penalty to a randomly
+    chosen value in the range `[alpha, alpha/weakness]`.
 
     Parameters
     ----------
@@ -108,7 +112,8 @@ class RandomizedLasso(Lasso):
 
     See also
     --------
-    sklearn.linear_model.LogisticRegression : learns logistic regression models using the same algorithm.
+    sklearn.linear_model.LogisticRegression : learns logistic regression models
+    using the same algorithm.
     """
     def __init__(self, weakness=0.5, alpha=1.0, fit_intercept=True, normalize=False,
                  precompute=False, copy_X=True, max_iter=1000,
