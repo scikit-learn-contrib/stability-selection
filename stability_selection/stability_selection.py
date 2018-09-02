@@ -29,7 +29,6 @@ from .bootstrap import (bootstrap_without_replacement,
 
 __all__ = ['StabilitySelection', 'plot_stability_path']
 
-DEFAULT_LAMBDA_GRID = np.logspace(-5, -2, 25)
 BOOTSTRAP_FUNC_MAPPING = {
     'subsample': bootstrap_without_replacement,
     'complementary_pairs': complementary_pairs_bootstrap,
@@ -227,10 +226,11 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
            another look at stability selection. Journal of the Royal Statistical Society:
            Series B (Statistical Methodology), 75(1), pp.55-80.
     """
-    def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C', lambda_grid=None,
-                 n_bootstrap_iterations=100, sample_fraction=0.5, threshold=0.6,
-                 bootstrap_func=bootstrap_without_replacement, bootstrap_threshold=None, verbose=0,
-                 n_jobs=1, pre_dispatch='2*n_jobs', random_state=None):
+    def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C',
+                 lambda_grid=np.logspace(-5, -2, 25), n_bootstrap_iterations=100,
+                 sample_fraction=0.5, threshold=0.6, bootstrap_func=bootstrap_without_replacement,
+                 bootstrap_threshold=None, verbose=0, n_jobs=1, pre_dispatch='2*n_jobs',
+                 random_state=None):
         self.base_estimator = base_estimator
         self.lambda_name = lambda_name
         self.lambda_grid = lambda_grid
@@ -259,9 +259,6 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             raise ValueError('lambda_name is set to %s, but base_estimator %s does not have a parameter '
                              'with that name' % (self.lambda_name, self.base_estimator.__class__.__name__))
 
-        if self.lambda_grid is None:
-            self.lambda_grid = DEFAULT_LAMBDA_GRID
-
         if isinstance(self.bootstrap_func, str):
             if self.bootstrap_func not in BOOTSTRAP_FUNC_MAPPING.keys():
                 raise ValueError('bootstrap_func is set to %s, but must be one of %s or a callable' %
@@ -285,7 +282,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         self._validate_input()
 
-        X, y = check_X_y(X, y, accept_sparse=True)
+        X, y = check_X_y(X, y, accept_sparse='csr')
 
         n_samples, n_variables = X.shape
         n_subsamples = np.floor(self.sample_fraction * n_samples).astype(int)
@@ -339,7 +336,8 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             values are indices into the input feature vector.
         """
 
-        if threshold is not None and (not isinstance(threshold, float) or not (0.0 < threshold <= 1.0)):
+        if threshold is not None and (not isinstance(threshold, float)
+                                      or not (0.0 < threshold <= 1.0)):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
 
         cutoff = self.threshold if threshold is None else threshold
@@ -363,16 +361,18 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         X_r : array of shape [n_samples, n_selected_features]
             The input samples with only the selected features.
         """
-        X = check_array(X)
+        X = check_array(X, accept_sparse='csr')
         mask = self.get_support(threshold=threshold)
 
         check_is_fitted(self, 'stability_scores_')
+
+        if len(mask) != X.shape[1]:
+            raise ValueError("X has a different shape than during fitting.")
 
         if not mask.any():
             warn("No features were selected: either the data is"
                  " too noisy or the selection test too strict.",
                  UserWarning)
             return np.empty(0).reshape((X.shape[0], 0))
-        if len(mask) != X.shape[1]:
-            raise ValueError("X has a different shape than during fitting.")
+
         return X[:, safe_mask(X, mask)]
