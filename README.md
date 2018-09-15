@@ -1,8 +1,8 @@
 # stability-selection - A scikit-learn compatible implementation of stability selection
 
-[![Travis Status](https://travis-ci.org/thuijskens/stability-selection.svg?branch=master)](https://travis-ci.org/thuijskens/stability-selection)
-[![Coverage Status](https://coveralls.io/repos/github/thuijskens/stability-selection/badge.svg?branch=master)](https://coveralls.io/github/thuijskens/stability-selection?branch=master)
-[![CircleCI Status](https://circleci.com/gh/thuijskens/stability-selection.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/thuijskens/stability-selection/tree/master)
+[![Build Status](https://travis-ci.org/scikit-learn-contrib/stability-selection.svg?branch=master)](https://travis-ci.org/scikit-learn-contrib/stability-selection)
+[![Coverage Status](https://coveralls.io/repos/github/scikit-learn-contrib/stability-selection/badge.svg?branch=master)](https://coveralls.io/github/scikit-learn-contrib/stability-selection?branch=master)
+[![CircleCI](https://circleci.com/gh/scikit-learn-contrib/stability-selection.svg?style=svg)](https://circleci.com/gh/scikit-learn-contrib/stability-selection)
 
 **stability-selection** is a Python implementation of the stability selection feature selection algorithm, first proposed by [Meinshausen and Buhlmann](https://stat.ethz.ch/~nicolai/stability.pdf). 
 
