@@ -17,7 +17,7 @@ GENERATED_DOC_DIR=$(readlink -f $GENERATED_DOC_DIR)
 
 if [ "$CIRCLE_BRANCH" = "master" ]
 then
-    dir=dev
+    dir=docs  # NOTE: I needed to change this from dev to docs for gh-pages to work
 else
     # Strip off .X
     dir="${CIRCLE_BRANCH::-2}"

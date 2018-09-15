@@ -4,14 +4,18 @@ Stability selection transformer
 ===============================
 
 This module contains a scikit-learn compatible implementation of
-stability selection[1].
+stability selection [1]_ .
 
 References
 ----------
-[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
+.. [1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
     Journal of the Royal Statistical Society: Series B
     (Statistical Methodology), 72(4), pp.417-473.
 
+.. [2] Shah, R.D. and Samworth, R.J., 2013. Variable selection with
+   error control: another look at stability selection. Journal
+   of the Royal Statistical Society: Series B (Statistical Methodology),
+    75(1), pp.55-80.
 """
 
 from warnings import warn
@@ -152,7 +156,7 @@ def plot_stability_path(stability_selection, threshold_highlight=None,
 
 
 class StabilitySelection(BaseEstimator, TransformerMixin):
-    """Stability selection [1] fits the estimator `base_estimator` on
+    """Stability selection [1]_ fits the estimator `base_estimator` on
     bootstrap samples of the original data set, for different values of
     the regularization parameter for `base_estimator`. Variables that
     reliably get selected by the model in these bootstrap samples are
@@ -161,7 +165,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     Parameters
     ----------
     base_estimator : object.
-        The base estimator used for stability selection.
+        The base estimator used for stability selection. The estimator
+        must have either a ``feature_importances_`` or ``coef_``
+        attribute after fitting.
 
     lambda_name : str.
         The name of the penalization parameter for the estimator
@@ -184,7 +190,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         The function used to subsample the data. This parameter can be:
             - A string, which must be one of
                 - 'subsample': For subsampling without replacement.
-                - 'complementary_pairs': For complementary pairs subsampling [2].
+                - 'complementary_pairs': For complementary pairs subsampling [2]_ .
+                - 'stratified': For stratified bootstrapping in imbalanced
+                   classification.
             - A function that takes y, and a random state
               as inputs and returns a list of sample indices in the range
               (0, len(y)-1). By default, indices are uniformly subsampled.

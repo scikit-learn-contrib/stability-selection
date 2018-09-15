@@ -54,6 +54,8 @@ This algorithm identifies a set of “stable” variables that are selected with
        :maxdepth: 2
        
        api
+       stability_selection
+       randomized_lasso
        auto_examples/index
        ...
 
