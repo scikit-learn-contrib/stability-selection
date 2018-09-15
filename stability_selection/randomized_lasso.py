@@ -4,11 +4,11 @@ Randomized LASSO estimators
 ===========================
 
 This module contains implementations of randomized logistic regression
-and randomized LASSO regression [1].
+and randomized LASSO regression [1]_ .
 
 References
 ----------
-[1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
+.. [1] Meinshausen, N. and Buhlmann, P., 2010. Stability selection.
     Journal of the Royal Statistical Society: Series B
     (Statistical Methodology), 72(4), pp.417-473.
 """
