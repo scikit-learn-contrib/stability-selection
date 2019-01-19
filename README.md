@@ -80,7 +80,7 @@ print(selector.get_support(indices=True))
 
 ### Bootstrapping strategies
 
-`stability-selection` uses bootstrapping without replacement by default (as proposed in the original paper), but does support different bootstrapping strategies. [Shah and Samworth] proposed *complentairy pairs* bootstrapping, where the data set is bootstrapped in pairs, such that the intersection is empty but the union equals the original data set. `StabilitySelection` supports this through the `bootstrap_func` parameter. 
+`stability-selection` uses bootstrapping without replacement by default (as proposed in the original paper), but does support different bootstrapping strategies. [Shah and Samworth] proposed *complementary pairs* bootstrapping, where the data set is bootstrapped in pairs, such that the intersection is empty but the union equals the original data set. `StabilitySelection` supports this through the `bootstrap_func` parameter.
 
 This parameter can be:
 - A string, which must be one of
