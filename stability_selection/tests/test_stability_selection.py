@@ -154,6 +154,35 @@ def test_no_features():
                         np.empty(0).reshape((X.shape[0], 0)))
 
 
+def test_stability_selection_max_features():
+    n, p, k = 1000, 1000, 5
+    lambda_grid=np.logspace(-5, -1, 25)
+
+    X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
+    selector = StabilitySelection(lambda_grid=lambda_grid,
+                                  max_features=1,
+                                  verbose=1)
+    selector.fit(X, y)
+    X_r = selector.transform(X)
+    assert(X_r.shape == (n, 1))
+
+    selector = StabilitySelection(lambda_grid=lambda_grid,
+                                  max_features=k,
+                                  verbose=1)
+    selector.fit(X, y)
+    X_r = selector.transform(X)
+    assert(X_r.shape == (n, k))
+
+    selector = StabilitySelection(lambda_grid=lambda_grid,
+                                  max_features=k+1,
+                                  verbose=1)
+    selector.fit(X, y)
+    X_r = selector.transform(X)
+    assert(X_r.shape == (n, k))
+
+    print('ok')
+
+
 def test_stability_plot():
     n, p, k = 500, 200, 5
 
