@@ -161,21 +161,21 @@ def test_stability_selection_max_features():
     X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
     selector = StabilitySelection(lambda_grid=lambda_grid,
                                   max_features=1,
-                                  verbose=1)
+                                  verbose=0)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, 1))
 
     selector = StabilitySelection(lambda_grid=lambda_grid,
                                   max_features=k,
-                                  verbose=1)
+                                  verbose=0)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, k))
 
     selector = StabilitySelection(lambda_grid=lambda_grid,
                                   max_features=k+1,
-                                  verbose=1)
+                                  verbose=0)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, k))
