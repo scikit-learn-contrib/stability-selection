@@ -44,7 +44,7 @@ def _generate_dummy_classification_data(p=1000, n=1000, k=5,
 def test_stability_selection_classification():
     n, p, k = 1000, 1000, 5
 
-    X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
     selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25), verbose=1)
     selector.fit(X, y)
 
@@ -59,7 +59,7 @@ def test_stability_selection_classification():
 def test_stability_selection_regression():
     n, p, k = 500, 1000, 5
 
-    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_regression_data(n=n, p=p, k=k)
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
@@ -81,7 +81,7 @@ def test_stability_selection_regression():
 def test_with_complementary_pairs_bootstrap():
     n, p, k = 500, 1000, 5
 
-    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_regression_data(n=n, p=p, k=k)
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
@@ -104,7 +104,7 @@ def test_with_complementary_pairs_bootstrap():
 def test_with_stratified_bootstrap():
     n, p, k = 1000, 1000, 5
 
-    X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
     selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25), verbose=1,
                                   bootstrap_func='stratified')
     selector.fit(X, y)
@@ -117,7 +117,7 @@ def test_with_stratified_bootstrap():
 def test_different_shape():
     n, p, k = 100, 200, 5
 
-    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_regression_data(n=n, p=p, k=k)
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
@@ -136,7 +136,7 @@ def test_different_shape():
 def test_no_features():
     n, p, k = 100, 200, 0
 
-    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_regression_data(n=n, p=p, k=k)
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
@@ -155,38 +155,50 @@ def test_no_features():
 
 
 def test_stability_selection_max_features():
-    n, p, k = 1000, 1000, 5
+    n, p, k = 2000, 100, 5
     lambda_grid=np.logspace(-5, -1, 25)
 
-    X, y, important_betas = _generate_dummy_classification_data(n=n, k=k)
-    selector = StabilitySelection(lambda_grid=lambda_grid,
-                                  max_features=1,
-                                  verbose=0)
+    X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
+    selector = StabilitySelection(lambda_grid=lambda_grid, max_features=1)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, 1))
 
-    selector = StabilitySelection(lambda_grid=lambda_grid,
-                                  max_features=k,
-                                  verbose=0)
+    selector = StabilitySelection(lambda_grid=lambda_grid, max_features=k)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, k))
 
-    selector = StabilitySelection(lambda_grid=lambda_grid,
-                                  max_features=k+1,
-                                  verbose=0)
+    selector = StabilitySelection(lambda_grid=lambda_grid, max_features=k+1)
     selector.fit(X, y)
     X_r = selector.transform(X)
     assert(X_r.shape == (n, k))
 
-    print('ok')
+
+@raises(ValueError)
+def test_get_support_max_features_low():
+    n, p, k = 500, 200, 5
+
+    X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
+    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25))
+    selector.fit(X, y)
+    selector.get_support(max_features=0)
+
+
+@raises(ValueError)
+def test_get_support_max_features_high():
+    n, p, k = 500, 200, 5
+
+    X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
+    selector = StabilitySelection(lambda_grid=np.logspace(-5, -1, 25))
+    selector.fit(X, y)
+    selector.get_support(max_features=p+1)
 
 
 def test_stability_plot():
     n, p, k = 500, 200, 5
 
-    X, y, important_betas = _generate_dummy_regression_data(n=n, k=k)
+    X, y, important_betas = _generate_dummy_regression_data(n=n, p=p, k=k)
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),

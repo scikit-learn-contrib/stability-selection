@@ -410,16 +410,16 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                              'got %s' % (n_features, max_features))
 
         threshold_cutoff = self.threshold if threshold is None else threshold
-        max_features_cutoff = self.max_features if max_features is None else max_features
+        mask = (self.stability_scores_.max(axis=1) > threshold_cutoff)
 
-        if max_features_cutoff is None:
-            mask = (self.stability_scores_.max(axis=1) > threshold_cutoff)
-        else:
+        max_features_cutoff = self.max_features if max_features is None else max_features
+        if max_features_cutoff is not None:
             exceed_counts = (self.stability_scores_ > threshold_cutoff).sum(axis=1)
-            max_features_cutoff = min(max_features_cutoff, (exceed_counts > 0).sum())
-            feature_indices = (-exceed_counts).argsort()[:max_features_cutoff]
-            mask = np.zeros(n_features, dtype=np.bool)
-            mask[feature_indices] = True
+            if max_features_cutoff < (exceed_counts > 0).sum():
+                feature_indices = (-exceed_counts).argsort()[:max_features_cutoff]
+                mask = np.zeros(n_features, dtype=np.bool)
+                mask[feature_indices] = True
+
         return mask if not indices else np.where(mask)[0]
 
     def transform(self, X, threshold=None):
