@@ -268,8 +268,8 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             75(1), pp.55-80.
     """
 
-    def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C',
-                 lambda_grid=np.logspace(-5, -2, 25), n_bootstrap_iterations=100,
+    def __init__(self, base_estimator=LogisticRegression(penalty='l1', solver='liblinear'),
+                 lambda_name='C', lambda_grid=np.logspace(-5, -2, 25), n_bootstrap_iterations=100,
                  sample_fraction=0.5, threshold=0.6, max_features=None,
                  bootstrap_func=bootstrap_without_replacement,
                  bootstrap_threshold=None, bootstrap_max_features=None,
