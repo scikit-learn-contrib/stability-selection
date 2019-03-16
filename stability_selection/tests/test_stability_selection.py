@@ -155,7 +155,7 @@ def test_no_features():
 
 
 def test_stability_selection_max_features():
-    n, p, k = 2000, 100, 5
+    n, p, k = 1000, 1000, 5
     lambda_grid=np.logspace(-5, -1, 25)
 
     X, y, important_betas = _generate_dummy_classification_data(n=n, p=p, k=k)
