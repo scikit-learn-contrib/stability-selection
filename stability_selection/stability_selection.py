@@ -63,10 +63,10 @@ def _bootstrap_generator(n_bootstrap_iterations, bootstrap_func, y,
 
 
 def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value,
-                          threshold=None):
+                          threshold=None, max_features=None):
     """
     Fits base_estimator on a bootstrap sample of the original data,
-    and returns a mas of the variables that are selected by the fitted model.
+    and returns a mask of the variables that are selected by the fitted model.
 
     Parameters
     ----------
@@ -95,6 +95,11 @@ def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value,
         or implicitly (e.g, Lasso), the threshold used is 1e-5.
         Otherwise, "mean" is used by default.
 
+    max_features : int or None, optional
+        The maximum number of features selected scoring above ``threshold``.
+        To disable ``threshold`` and only select based on ``max_features``,
+        set ``threshold=-np.inf``.
+
     Returns
     -------
     selected_variables : array-like, shape = [n_features]
@@ -108,6 +113,7 @@ def _fit_bootstrap_sample(base_estimator, X, y, lambda_name, lambda_value,
     selector_model = _return_estimator_from_pipeline(base_estimator)
     variable_selector = SelectFromModel(estimator=selector_model,
                                         threshold=threshold,
+                                        max_features=max_features,
                                         prefit=True)
     return variable_selector.get_support()
 
@@ -187,6 +193,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
     threshold : float.
         Threshold defining the minimum cutoff value for the stability scores.
 
+    max_features : int or None, optional
+        The maximum number of features selected scoring above ``threshold``.
+
     bootstrap_func : str or callable fun (default=bootstrap_without_replacement)
         The function used to subsample the data. This parameter can be:
             - A string, which must be one of
@@ -207,6 +216,11 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         estimator has a parameter penalty set to l1, either explicitly
         or implicitly (e.g, Lasso), the threshold used is 1e-5.
         Otherwise, "mean" is used by default.
+
+    bootstrap_max_features : int or None, optional
+        The maximum number of features selected scoring above ``bootstrap_threshold``.
+        To disable ``bootstrap_threshold`` and only select based on ``max_features``,
+        set ``bootstrap_threshold=-np.inf``.
 
     verbose : integer.
         Controls the verbosity: the higher, the more messages.
@@ -253,10 +267,13 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
            of the Royal Statistical Society: Series B (Statistical Methodology),
             75(1), pp.55-80.
     """
-    def __init__(self, base_estimator=LogisticRegression(penalty='l1'), lambda_name='C',
-                 lambda_grid=np.logspace(-5, -2, 25), n_bootstrap_iterations=100,
-                 sample_fraction=0.5, threshold=0.6, bootstrap_func=bootstrap_without_replacement,
-                 bootstrap_threshold=None, verbose=0, n_jobs=1, pre_dispatch='2*n_jobs',
+
+    def __init__(self, base_estimator=LogisticRegression(penalty='l1', solver='liblinear'),
+                 lambda_name='C', lambda_grid=np.logspace(-5, -2, 25), n_bootstrap_iterations=100,
+                 sample_fraction=0.5, threshold=0.6, max_features=None,
+                 bootstrap_func=bootstrap_without_replacement,
+                 bootstrap_threshold=None, bootstrap_max_features=None,
+                 verbose=0, n_jobs=1, pre_dispatch='2*n_jobs',
                  random_state=None):
         self.base_estimator = base_estimator
         self.lambda_name = lambda_name
@@ -264,8 +281,10 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         self.n_bootstrap_iterations = n_bootstrap_iterations
         self.sample_fraction = sample_fraction
         self.threshold = threshold
+        self.max_features = max_features
         self.bootstrap_func = bootstrap_func
         self.bootstrap_threshold = bootstrap_threshold
+        self.bootstrap_max_features = bootstrap_max_features
         self.verbose = verbose
         self.n_jobs = n_jobs
         self.pre_dispatch = pre_dispatch
@@ -281,6 +300,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
 
         if not isinstance(self.threshold, float) or not (0.0 < self.threshold <= 1.0):
             raise ValueError('threshold should be a float in (0, 1], got %s' % self.threshold)
+
+        if self.max_features is not None and (not isinstance(self.max_features, int) or self.max_features < 1):
+            raise ValueError('max_features should be a positive int, got %s' % self.max_features)
 
         if self.lambda_name not in self.base_estimator.get_params().keys():
             raise ValueError('lambda_name is set to %s, but base_estimator %s '
@@ -340,7 +362,8 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
                                              y=y[subsample],
                                              lambda_name=self.lambda_name,
                                              lambda_value=lambda_value,
-                                             threshold=self.bootstrap_threshold)
+                                             threshold=self.bootstrap_threshold,
+                                             max_features=self.bootstrap_max_features)
               for subsample in bootstrap_samples)
 
             stability_scores[:, idx] = np.vstack(selected_variables).mean(axis=0)
@@ -348,7 +371,7 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         self.stability_scores_ = stability_scores
         return self
 
-    def get_support(self, indices=False, threshold=None):
+    def get_support(self, indices=False, threshold=None, max_features=None):
         """Get a mask, or integer index, of the features selected
 
         Parameters
@@ -360,6 +383,9 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
         threshold: float.
             Threshold defining the minimum cutoff value for the
             stability scores.
+
+        max_features : int or None, optional
+            The maximum number of features selected scoring above ``threshold``.
 
         Returns
         -------
@@ -377,8 +403,22 @@ class StabilitySelection(BaseEstimator, TransformerMixin):
             raise ValueError('threshold should be a float in (0, 1], '
                              'got %s' % self.threshold)
 
-        cutoff = self.threshold if threshold is None else threshold
-        mask = (self.stability_scores_.max(axis=1) > cutoff)
+        n_features = self.stability_scores_.shape[0]
+        if max_features is not None and (not isinstance(max_features, int)
+                                         or not(1 < max_features <= n_features)):
+            raise ValueError('max_features should be an int in [1, %s], '
+                             'got %s' % (n_features, max_features))
+
+        threshold_cutoff = self.threshold if threshold is None else threshold
+        mask = (self.stability_scores_.max(axis=1) > threshold_cutoff)
+
+        max_features_cutoff = self.max_features if max_features is None else max_features
+        if max_features_cutoff is not None:
+            exceed_counts = (self.stability_scores_ > threshold_cutoff).sum(axis=1)
+            if max_features_cutoff < (exceed_counts > 0).sum():
+                feature_indices = (-exceed_counts).argsort()[:max_features_cutoff]
+                mask = np.zeros(n_features, dtype=np.bool)
+                mask[feature_indices] = True
 
         return mask if not indices else np.where(mask)[0]
 

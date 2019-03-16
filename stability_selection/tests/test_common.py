@@ -71,3 +71,8 @@ def test_sample_fraction():
 @raises(ValueError)
 def test_lambda_name():
     StabilitySelection(lambda_name='n_estimators')._validate_input()
+
+
+@raises(ValueError)
+def test_max_features_zero():
+    StabilitySelection(max_features=0)._validate_input()
