@@ -2,3 +2,4 @@ nose>=1.1.2
 scikit-learn>=0.19
 matplotlib>=2.0.0
 numpy>=1.8.0
+joblib>=0.13
