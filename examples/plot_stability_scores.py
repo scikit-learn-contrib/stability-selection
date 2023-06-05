@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     base_estimator = Pipeline([
         ('scaler', StandardScaler()),
-        ('model', LogisticRegression(penalty='l1'))
+        ('model', LogisticRegression())
     ])
     selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',
                                   lambda_grid=np.logspace(-5, -1, 50))

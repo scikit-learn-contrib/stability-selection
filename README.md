@@ -12,7 +12,7 @@ The idea behind stability selection is to inject more noise into the original pr
 
 To install the module, clone the repository
 ```bash
-git clone https://github.com/scikit-learn-contrib/stability-selection.git
+git clone https://github.com/TonyEinstein/stability-selection.git
 ```
 Before installing the module you will need `numpy`, `matplotlib`, and `sklearn`. Install these modules separately, or install using the `requirements.txt` file:
 ```bash
@@ -104,7 +104,8 @@ to run stability selection with complementary pairs bootstrapping.
 
 ## Feedback and contributing
 
-Feedback and contributions are much appreciated. If you have any feedback, please post it on the [issue tracker](https://github.com/scikit-learn-contrib/stability-selection/issues). 
+* Feedback and contributions are much appreciated. If you have any feedback, please post it on the [issue tracker](https://github.com/TonyEinstein/stability-selection/issues). 
+
 
 ## References
 
@@ -115,3 +116,4 @@ Feedback and contributions are much appreciated. If you have any feedback, pleas
    error control: another look at stability selection. Journal
    of the Royal Statistical Society: Series B (Statistical Methodology),
     75(1), pp.55-80.
+[3] https://github.com/scikit-learn-contrib/stability-selection
