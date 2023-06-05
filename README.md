@@ -104,7 +104,8 @@ to run stability selection with complementary pairs bootstrapping.
 
 ## Feedback and contributing
 
-Feedback and contributions are much appreciated. If you have any feedback, please post it on the [issue tracker](https://github.com/scikit-learn-contrib/stability-selection/issues). 
+* Feedback and contributions are much appreciated. If you have any feedback, please post it on the [issue tracker](https://github.com/scikit-learn-contrib/stability-selection/issues). 
+
 
 ## References
 
@@ -115,3 +116,4 @@ Feedback and contributions are much appreciated. If you have any feedback, pleas
    error control: another look at stability selection. Journal
    of the Royal Statistical Society: Series B (Statistical Methodology),
     75(1), pp.55-80.
+[3] https://github.com/scikit-learn-contrib/stability-selection

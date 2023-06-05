@@ -18,7 +18,7 @@ from scipy import sparse
 from scipy.sparse import issparse
 
 from sklearn.linear_model import LogisticRegression, Lasso
-from sklearn.linear_model.base import _preprocess_data
+from sklearn.linear_model._base import _preprocess_data
 from sklearn.utils import check_X_y, check_random_state
 
 __all__ = ['RandomizedLogisticRegression', 'RandomizedLasso']
@@ -120,9 +120,9 @@ class RandomizedLasso(Lasso):
                  tol=1e-4, warm_start=False, positive=False,
                  random_state=None, selection='cyclic'):
         self.weakness = weakness
+        self.normalize = normalize
         super(RandomizedLasso, self).__init__(
-            alpha=alpha, fit_intercept=fit_intercept,
-            normalize=normalize, precompute=precompute, copy_X=copy_X,
+            alpha=alpha, fit_intercept=fit_intercept, precompute=precompute, copy_X=copy_X,
             max_iter=max_iter, tol=tol, warm_start=warm_start,
             positive=positive, random_state=random_state,
             selection=selection)
@@ -149,9 +149,10 @@ class RandomizedLasso(Lasso):
 
         weights = weakness * random_state.randint(0, 1 + 1, size=(n_features,))
 
-        # TODO: I am afraid this will do double normalization if set to true
-        #X, y, _, _ = _preprocess_data(X, y, self.fit_intercept, normalize=self.normalize, copy=False,
-        #             sample_weight=None, return_mean=False)
+        # TODO: I am afraid this will do double normalization if set to true.
+        X, y, X_offset, y_offset, X_scale = _preprocess_data(X, y, self.fit_intercept,
+                                                             normalize=self.normalize,copy=False,
+                                                             sample_weight=None,check_input=True)
 
         # TODO: Check if this is a problem if it happens before standardization
         X_rescaled = _rescale_data(X, weights)
