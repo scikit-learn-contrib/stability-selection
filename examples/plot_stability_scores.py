@@ -38,8 +38,7 @@ if __name__ == '__main__':
         ('scaler', StandardScaler()),
         ('model', LogisticRegression())
     ])
-    selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',
-                                  lambda_grid=np.logspace(-5, -1, 50))
+    selector = StabilitySelection(base_estimator=base_estimator, lambda_name='model__C',lambda_grid=np.logspace(-5, -1, 50))
     selector.fit(X, y)
 
     fig, ax = plot_stability_path(selector)

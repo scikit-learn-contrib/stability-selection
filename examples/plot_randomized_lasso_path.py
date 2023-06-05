@@ -41,8 +41,8 @@ if __name__ == '__main__':
 
     for weakness in [0.2, 0.5, 1.0]:
         estimator = RandomizedLasso(weakness=weakness,normalize=True)
-        selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',
-                                      lambda_grid=lambda_grid, threshold=0.9, verbose=1)
+        selector = StabilitySelection(base_estimator=estimator, lambda_name='alpha',lambda_grid=lambda_grid,
+                                      threshold=0.9, verbose=1)
         selector.fit(X, y)
 
         fig, ax = plot_stability_path(selector)

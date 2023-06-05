@@ -19,7 +19,6 @@ References
 """
 
 from warnings import warn
-
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin, clone

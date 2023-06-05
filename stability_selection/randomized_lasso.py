@@ -150,8 +150,9 @@ class RandomizedLasso(Lasso):
         weights = weakness * random_state.randint(0, 1 + 1, size=(n_features,))
 
         # TODO: I am afraid this will do double normalization if set to true.
-        X, y, X_offset, y_offset, X_scale = _preprocess_data(X, y, self.fit_intercept, normalize=self.normalize,
-                                                             copy=False,sample_weight=None,check_input=True)
+        X, y, X_offset, y_offset, X_scale = _preprocess_data(X, y, self.fit_intercept,
+                                                             normalize=self.normalize,copy=False,
+                                                             sample_weight=None,check_input=True)
 
         # TODO: Check if this is a problem if it happens before standardization
         X_rescaled = _rescale_data(X, weights)
